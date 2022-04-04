@@ -1,0 +1,21 @@
+name: Tests
+on:
+    push:
+        branches:
+            - main
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out repository code
+              uses: actions/checkout@v2
+            - name: install node v14
+              uses: actions/setup-node@v1
+              with:
+                  node-version: 14
+            - name: install dependencies
+              run: yarn install --frozen-lockfile
+            - name: run all tests
+              run: yarn nx affected --target=test --all
+            - name: run all e2e tests
+              run: yarn nx affected --target=e2e --all

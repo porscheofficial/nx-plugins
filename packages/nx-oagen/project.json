@@ -1,0 +1,56 @@
+{
+    "root": "packages/nx-oagen",
+    "sourceRoot": "packages/nx-oagen/src",
+    "projectType": "library",
+    "targets": {
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["packages/nx-oagen/**/*.ts"]
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["coverage/packages/nx-oagen"],
+            "options": {
+                "jestConfig": "packages/nx-oagen/jest.config.js",
+                "passWithNoTests": true
+            }
+        },
+        "build": {
+            "executor": "@nrwl/node:package",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/packages/nx-oagen",
+                "tsConfig": "packages/nx-oagen/tsconfig.lib.json",
+                "packageJson": "packages/nx-oagen/package.json",
+                "main": "packages/nx-oagen/src/index.ts",
+                "assets": [
+                    "packages/nx-oagen/*.md",
+                    {
+                        "input": "./packages/nx-oagen/src",
+                        "glob": "**/!(*.ts)",
+                        "output": "./src"
+                    },
+                    {
+                        "input": "./packages/nx-oagen/src",
+                        "glob": "**/*.d.ts",
+                        "output": "./src"
+                    },
+                    {
+                        "input": "./packages/nx-oagen",
+                        "glob": "generators.json",
+                        "output": "."
+                    },
+                    {
+                        "input": "./packages/nx-oagen",
+                        "glob": "executors.json",
+                        "output": "."
+                    }
+                ]
+            }
+        }
+    },
+    "tags": []
+}

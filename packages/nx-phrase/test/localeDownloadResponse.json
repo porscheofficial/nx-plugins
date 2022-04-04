@@ -1,0 +1,7 @@
+{
+    "a.b.c.d": "Foo",
+    "a.c.d.e": "Bar",
+    "a.d.e.c": "FooBar",
+    "o.l.e.o": "BarFoo",
+    "K.u.i.l": "I have spoken"
+}

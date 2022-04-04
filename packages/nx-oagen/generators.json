@@ -1,0 +1,12 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "name": "nx-oagen",
+    "version": "0.0.1",
+    "generators": {
+        "nx-oagen": {
+            "factory": "./src/generators/nx-oagen/generator",
+            "schema": "./src/generators/nx-oagen/schema.json",
+            "description": "nx-oagen generator"
+        }
+    }
+}

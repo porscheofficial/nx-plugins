@@ -1,0 +1,47 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "cli": "nx",
+    "title": "phrase executor",
+    "description": "l10n utils",
+    "type": "object",
+    "properties": {
+        "operation": {
+            "description": "pull or push",
+            "type": "string",
+            "default": "pull"
+        },
+        "projectId": {
+            "description": "",
+            "type": "string"
+        },
+        "branch": {
+            "description": "",
+            "type": "string"
+        },
+        "fileFormat": {
+            "description": "",
+            "type": "string"
+        },
+        "output": {
+            "description": "",
+            "type": "string"
+        },
+        "uploadLanguageId": {
+            "description": "",
+            "type": "string"
+        },
+        "sourceRoot": {
+            "description": "",
+            "type": "string"
+        },
+        "sourceGlob": {
+            "description": "",
+            "type": "string"
+        },
+        "ignoreGlob": {
+            "description": "",
+            "type": "string"
+        }
+    },
+    "required": []
+}

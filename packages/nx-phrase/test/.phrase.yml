@@ -1,0 +1,6 @@
+phrase:
+    test_app:
+        access_token: access_token
+        project_id: project_id
+        upload_language_id: upload_language_id
+        output: tmp/delete/me

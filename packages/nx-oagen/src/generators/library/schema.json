@@ -1,0 +1,41 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "cli": "nx",
+    "$id": "NxOagen",
+    "title": "",
+    "type": "object",
+    "properties": {
+        "projectName": {
+            "type": "string",
+            "description": "nx project name",
+            "$default": {
+                "$source": "argv",
+                "index": 0
+            }
+        },
+        "specFile": {
+            "type": "string",
+            "description": "path or url to spec file"
+        },
+        "generator": {
+            "description": "generator to use (defaults to typescript-axios)",
+            "type": "string",
+            "default": "typescript-axios",
+            "alias": "g"
+        },
+        "tags": {
+            "type": "string",
+            "description": "Add tags to the project (used for linting)",
+            "alias": "t"
+        },
+        "directory": {
+            "type": "string",
+            "description": "A directory where the project is placed",
+            "alias": "d"
+        },
+        "additionalProperties": {
+            "type": "object"
+        }
+    },
+    "required": ["projectName", "specFile"]
+}

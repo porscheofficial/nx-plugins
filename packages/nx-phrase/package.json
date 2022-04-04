@@ -1,0 +1,22 @@
+{
+    "name": "@porscheofficial/nx-phrase",
+    "version": "0.0.5",
+    "repository": {
+        "type": "url",
+        "url": "https://github.com/porscheofficial/nx-plugins",
+        "directory": "packages/nx-phrase"
+    },
+    "license": "MIT",
+    "main": "src/index.js",
+    "generators": "./generators.json",
+    "executors": "./executors.json",
+    "peerDependencies": {
+        "js-yaml": "^4.x",
+        "form-data": "^4.x",
+        "@formatjs/cli": "^4.x",
+        "fs-extra": "^10.x"
+    },
+    "devDependencies": {
+        "nock": "^13.2.4"
+    }
+}

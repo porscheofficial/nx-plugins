@@ -1,0 +1,16 @@
+{
+    "name": "@porscheofficial/nx-oagen",
+    "version": "0.0.1",
+    "repository": {
+        "type": "url",
+        "url": "https://github.com/porscheofficial/nx-plugins",
+        "directory": "packages/nx-oagen"
+    },
+    "license": "MIT",
+    "main": "src/index.js",
+    "generators": "./generators.json",
+    "executors": "./executors.json",
+    "dependencies": {
+        "@openapitools/openapi-generator-cli": "^2.x"
+    }
+}
