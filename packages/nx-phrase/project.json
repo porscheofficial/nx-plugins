@@ -1,0 +1,51 @@
+{
+    "root": "packages/nx-phrase",
+    "sourceRoot": "packages/nx-phrase/src",
+    "projectType": "library",
+    "targets": {
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["packages/nx-phrase/**/*.ts"]
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["coverage/packages/nx-phrase"],
+            "options": {
+                "jestConfig": "packages/nx-phrase/jest.config.js",
+                "passWithNoTests": true
+            }
+        },
+        "build": {
+            "executor": "@nrwl/node:package",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/packages/nx-phrase",
+                "tsConfig": "packages/nx-phrase/tsconfig.lib.json",
+                "packageJson": "packages/nx-phrase/package.json",
+                "main": "packages/nx-phrase/src/index.ts",
+                "assets": [
+                    "packages/nx-phrase/*.md",
+                    {
+                        "input": "./packages/nx-phrase/src",
+                        "glob": "**/!(*.ts)",
+                        "output": "./src"
+                    },
+                    {
+                        "input": "./packages/nx-phrase/src",
+                        "glob": "**/*.d.ts",
+                        "output": "./src"
+                    },
+                    {
+                        "input": "./packages/nx-phrase",
+                        "glob": "executors.json",
+                        "output": "."
+                    }
+                ]
+            }
+        }
+    },
+    "tags": []
+}

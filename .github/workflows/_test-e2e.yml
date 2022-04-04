@@ -1,0 +1,28 @@
+on:
+    workflow_call:
+        inputs:
+            baseRef:
+                required: true
+                type: string
+
+jobs:
+    test:
+        name: e2e
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  fetch-depth: 0
+
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: "14"
+                  cache: "yarn"
+
+            - run: yarn install --frozen-lockfile
+
+            - uses: ./.github/actions/nx-affected
+              name: "Nx affected: e2e"
+              with:
+                  baseRef: ${{ inputs.baseRef }}
+                  target: e2e

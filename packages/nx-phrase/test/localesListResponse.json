@@ -1,0 +1,34 @@
+[
+    {
+        "id": "lksdjflkjsdf",
+        "name": "fr-BE",
+        "code": "fr-BE",
+        "_default": false,
+        "main": false,
+        "rtl": false,
+        "pluralForms": ["zero", "one", "other"],
+        "sourceLocale": {
+            "id": "tyuyiyiyuiyuidf",
+            "name": "fr-FR",
+            "code": "fr-FR"
+        },
+        "createdAt": "2020-10-12T05:42:00.000Z",
+        "updatedAt": "2022-02-07T14:53:01.000Z"
+    },
+    {
+        "id": "ldkfjglkdjfg",
+        "name": "fr-CA",
+        "code": "fr-CA",
+        "_default": false,
+        "main": false,
+        "rtl": false,
+        "pluralForms": ["zero", "one", "other"],
+        "sourceLocale": {
+            "id": "hjkhjkhjkhjkhkhjk",
+            "name": "fr-FR",
+            "code": "fr-FR"
+        },
+        "createdAt": "2020-06-10T07:49:57.000Z",
+        "updatedAt": "2022-02-07T14:53:05.000Z"
+    }
+]

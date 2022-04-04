@@ -1,0 +1,8 @@
+{
+    "version": 2,
+    "projects": {
+        "nx-oagen": "packages/nx-oagen",
+        "nx-oagen-e2e": "e2e/nx-oagen-e2e",
+        "nx-phrase": "packages/nx-phrase"
+    }
+}

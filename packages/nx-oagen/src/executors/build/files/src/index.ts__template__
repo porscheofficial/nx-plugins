@@ -1,0 +1,6 @@
+<% if (generator === 'typescript-axios') { %>
+export * from "./lib"
+<% } else { %>
+// unsupported generator <%= generator %>
+// please adjust this file according to your needs
+<% } %>

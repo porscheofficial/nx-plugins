@@ -1,0 +1,17 @@
+name: Nx affected
+description: Run a Nx task for the affected applications/libraries
+
+inputs:
+    baseRef:
+        description: Ref to compare the current state to
+        required: true
+
+    target:
+        description: Nx target to run
+        required: true
+
+runs:
+    using: "composite"
+    steps:
+        - run: yarn nx affected --base ${{ inputs.baseRef }} --target ${{ inputs.target }}
+          shell: bash
