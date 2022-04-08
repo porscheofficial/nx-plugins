@@ -47,6 +47,11 @@
                         "input": "./packages/nx-oagen",
                         "glob": "executors.json",
                         "output": "."
+                    },
+                    {
+                        "input": "./",
+                        "glob": "LICENSE.md",
+                        "output": "."
                     }
                 ]
             }

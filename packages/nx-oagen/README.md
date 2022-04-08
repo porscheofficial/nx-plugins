@@ -1,6 +1,6 @@
 # @porscheofficial/nx-oagen
 
-This plugin should helps with setting up nx libraries for typescript api-clients that are generated using openapi-generator. It is merely a wrapper for the tools provided by [openapi-generator](https://github.com/OpenAPITools/openapi-generator).
+This plugin helps with setting up nx libraries for typescript api-clients that are generated using openapi-generator. It is merely a wrapper for the tools provided by [openapi-generator](https://github.com/OpenAPITools/openapi-generator).
 
 For reference: This library was generated with `nx g @nrwl/nx-plugin:plugin nx-oagen`.
 
@@ -16,14 +16,18 @@ This plugin provides both a generator and a builder.
 
 To create a fresh library that should contain the generated api, use the generator like this:
 
-    nx g @porscheofficial/nx-oagen <project-name> \
-      --specFile=<path or url to spec>
+```sh
+nx g @porscheofficial/nx-oagen <project-name> \
+  --specFile=<path or url to spec>
+```
 
 You may add additional generator arguments (the ones you'd usually add with `--additionalProperties`) by adding `--add <name>=<value>`. Example
 
-    nx g @porscheofficial/nx-oagen petstore-api \
-      --specFile=https://petstore.swagger.io/v2/swagger.json \
-      --add withSeparateModelsAndApi=true
+```sh
+nx g @porscheofficial/nx-oagen petstore-api \
+  --specFile=https://petstore.swagger.io/v2/swagger.json \
+  --add withSeparateModelsAndApi=true
+```
 
 for the `typescript-axios` generator. The generator will add some defaults that have proven to be usefull, but you can change those anytime in your `project.json`.
 
@@ -31,12 +35,14 @@ for the `typescript-axios` generator. The generator will add some defaults that 
 
 In your project.json add a target that looks smiliar to this:
 
-    "build": {
-      "executor": "@porscheofficial/nx-oagen:build",
-      "options": {
-        "specFile": "https://petstore.swagger.io/v2/swagger.json"
-      }
-    }
+```json
+"build": {
+  "executor": "@porscheofficial/nx-oagen:build",
+  "options": {
+    "specFile": "https://petstore.swagger.io/v2/swagger.json"
+  }
+}
+```
 
 **Builder Options**
 

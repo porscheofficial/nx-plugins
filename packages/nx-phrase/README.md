@@ -1,6 +1,6 @@
 # @porscheofficial/nx-phrase
 
-This plugin should help you with your nx react app to extract translations defined via `react-intl`'s `#defineMessages`-method.
+This plugin helps you with your nx react app to extract translations defined via `react-intl`'s `#defineMessages`-method.
 
 The actual extraction is handled by `@formatjs/cli`'s `extract` command.
 
@@ -10,13 +10,17 @@ For reference: This plugin was generated with `nx g @nrwl/nx-plugin:plugin nx-ph
 
 To extract translations from your source code and upload them to phrase use:
 
-    nx run your-project-name:translation:push
+```sh
+nx run your-project-name:translation:push
+```
 
 To download translations from phrase use:
 
-    nx run your-project-name:translation
-    # OR
-    nx run your-project-name:translation:pull
+```sh
+nx run your-project-name:translation
+# OR
+nx run your-project-name:translation:pull
+```
 
 ## Configuration
 
@@ -26,19 +30,21 @@ Configuration happens in two steps. You'll need to adjust your project's configu
 
 To make the executor available via nx commands, add this to your `targets` section in your `project.json`:
 
-    "translation": {
-      "executor": "@porscheofficial/nx-phrase:build",
-        "options": {},
-        "configurations": {
-          "pull": {
-            "operation": "pull"
-          },
-          "push": {
-            "operation": "push"
-          }
-        }
+```json
+"translation": {
+  "executor": "@porscheofficial/nx-phrase:build",
+    "options": {},
+    "configurations": {
+      "pull": {
+        "operation": "pull"
+      },
+      "push": {
+        "operation": "push"
       }
     }
+  }
+}
+```
 
 Technically the `pull` configuration is unnecessary because pull the the default action of the executor, but it helps to keep things fluid.
 
@@ -48,18 +54,20 @@ You may also specify all but the `access_token` options (see below) in the optio
 
 The plugin uses a central configuration file that has to be located in your nx project's root folder. The name of the file must be `.phrase.yml`. The file looks like this:
 
-    phrase:
-        my-app-name:
-            access_token: phrase_access_token
-            project_id: phrase_project_id
-            output: src/assets/l10n
-            upload_language_id: phrase_language_id
-            file_format: react_simple_json       (optional)
-            branch: phrase_branch_name           (optional)
-            source_root: source_root_override    (optional)
-        my-other-app-name:
-            access_token: ...
-            ...
+```yaml
+phrase:
+    my-app-name:
+        access_token: phrase_access_token
+        project_id: phrase_project_id
+        output: src/assets/l10n
+        upload_language_id: phrase_language_id
+        file_format: react_simple_json       (optional)
+        branch: phrase_branch_name           (optional)
+        source_root: source_root_override    (optional)
+    my-other-app-name:
+        access_token: ...
+        ...
+```
 
 **Description:**
 

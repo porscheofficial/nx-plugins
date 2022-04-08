@@ -15,8 +15,5 @@
         "form-data": "^4.x",
         "@formatjs/cli": "^4.x",
         "fs-extra": "^10.x"
-    },
-    "devDependencies": {
-        "nock": "^13.2.4"
     }
 }

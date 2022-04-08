@@ -42,6 +42,11 @@
                         "input": "./packages/nx-phrase",
                         "glob": "executors.json",
                         "output": "."
+                    },
+                    {
+                        "input": "./",
+                        "glob": "LICENSE.md",
+                        "output": "."
                     }
                 ]
             }
