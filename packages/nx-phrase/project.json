@@ -14,7 +14,7 @@
             "executor": "@nrwl/jest:jest",
             "outputs": ["coverage/packages/nx-phrase"],
             "options": {
-                "jestConfig": "packages/nx-phrase/jest.config.js",
+                "jestConfig": "packages/nx-phrase/jest.config.ts",
                 "passWithNoTests": true
             }
         },
