@@ -1,6 +1,6 @@
 module.exports = {
-    displayName: "nx-oagen",
-    preset: "../../jest.preset.js",
+    displayName: "nx-phrase",
+
     globals: {
         "ts-jest": {
             tsconfig: "<rootDir>/tsconfig.spec.json",
@@ -11,5 +11,6 @@ module.exports = {
         "^.+\\.[tj]sx?$": "ts-jest",
     },
     moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
-    coverageDirectory: "../../coverage/packages/nx-oagen",
+    coverageDirectory: "../../coverage/packages/nx-phrase",
+    preset: "../../jest.preset.ts",
 }
