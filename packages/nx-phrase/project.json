@@ -1,5 +1,5 @@
 {
-    "root": "packages/nx-phrase",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "packages/nx-phrase/src",
     "projectType": "library",
     "targets": {
