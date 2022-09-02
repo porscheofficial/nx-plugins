@@ -44,6 +44,11 @@
                         "output": "."
                     },
                     {
+                        "input": "./packages/nx-phrase",
+                        "glob": "generators.json",
+                        "output": "."
+                    },
+                    {
                         "input": "./",
                         "glob": "LICENSE.md",
                         "output": "."

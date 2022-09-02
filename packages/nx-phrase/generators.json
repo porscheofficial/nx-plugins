@@ -1,0 +1,12 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "name": "nx-phrase",
+    "version": "0.0.1",
+    "generators": {
+        "nx-phrase": {
+            "factory": "./src/generators/nx-phrase/generator",
+            "schema": "./src/generators/nx-phrase/schema.json",
+            "description": "nx-phrase generator"
+        }
+    }
+}

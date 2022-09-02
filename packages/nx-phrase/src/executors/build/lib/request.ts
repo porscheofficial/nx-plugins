@@ -82,12 +82,12 @@ export function requestUrl(
     url: URL,
     requestArgs: Omit<Parameters<typeof request>[0], "host" | "port" | "path" | "protocol">
 ) {
-    const { host, port, pathname, protocol, searchParams } = url
+    const { hostname, port, pathname, protocol, searchParams } = url
 
     const combinedPath = pathname + (searchParams ? `?${searchParams.toString()}` : "")
 
     return request({
-        host,
+        hostname,
         port,
         path: combinedPath,
         protocol,

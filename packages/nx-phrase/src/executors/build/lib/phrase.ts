@@ -1,7 +1,7 @@
 import FormData from "form-data"
 import { requestUrl } from "./request"
 
-const BASE_URL = "https://api.phrase.com/v2"
+const BASE_URL = process.env.PHRASE_API_BASE_URL ?? "https://api.phrase.com/v2"
 
 export type Translations = Record<string, string>
 
@@ -29,11 +29,14 @@ export interface PhraseClientConfig {
 type PhraseAllPaginated<T> = Omit<T, "page" | "per_page">
 
 export class PhraseClient {
+    #baseUrl = BASE_URL
     private ITEMS_PER_PAGE = 20
     private credentials: { token: string }
 
     constructor(config: PhraseClientConfig) {
         this.credentials = { token: config.token }
+
+        console.log(`Using ${this.#baseUrl} as base`)
     }
 
     public async localesList({
@@ -46,7 +49,7 @@ export class PhraseClient {
         sort_by?: string
         branch?: string
     }): Promise<PhraseLocale[]> {
-        const url = new URL(`${BASE_URL}/projects/${project_id}/locales`)
+        const url = new URL(`${this.#baseUrl}/projects/${project_id}/locales`)
         for (const argName in optionalArgs) {
             if (optionalArgs[argName]) {
                 url.searchParams.set(argName, optionalArgs[argName])
@@ -91,7 +94,7 @@ export class PhraseClient {
     }): Promise<string> {
         console.log("Downloading translation for", id)
 
-        const url = new URL(`${BASE_URL}/projects/${project_id}/locales/${id}/download`)
+        const url = new URL(`${this.#baseUrl}/projects/${project_id}/locales/${id}/download`)
         for (const argName in otherArgs) {
             if (otherArgs[argName]) {
                 url.searchParams.set(argName, otherArgs[argName])
@@ -123,7 +126,7 @@ export class PhraseClient {
         },
         fileContent: string | Buffer
     ) {
-        const url = new URL(`${BASE_URL}/projects/${project_id}/uploads`)
+        const url = new URL(`${this.#baseUrl}/projects/${project_id}/uploads`)
         const body = new FormData()
         for (const argName in otherArgs) {
             if (otherArgs[argName]) {
