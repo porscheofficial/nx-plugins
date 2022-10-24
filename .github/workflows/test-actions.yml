@@ -12,7 +12,7 @@ jobs:
             - name: install node v14
               uses: actions/setup-node@v3
               with:
-                  node-version: 14
+                  node-version: 16
             - name: install dependencies
               run: yarn install --frozen-lockfile
             - name: run all tests
