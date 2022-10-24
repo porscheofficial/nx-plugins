@@ -15,7 +15,8 @@ export default async function (tree: Tree, options: NxPhraseGeneratorSchema) {
     const { projectName } = options
 
     const { peerDependencies } = readJson(tree, `node_modules/${NPM_SCOPE}/nx-phrase/package.json`)
-    const installDependencies = addDependenciesToPackageJson(tree, undefined, peerDependencies)
+    console.log(peerDependencies)
+    const installDependencies = addDependenciesToPackageJson(tree, {}, peerDependencies)
     if (installDependencies) {
         await installDependencies()
     }
