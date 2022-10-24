@@ -9,13 +9,13 @@ jobs:
         steps:
             - name: Check out repository code
               uses: actions/checkout@v3
-            - name: install node v14
+            - name: install node
               uses: actions/setup-node@v3
               with:
                   node-version: 16
             - name: install dependencies
               run: yarn install --frozen-lockfile
             - name: run all tests
-              run: yarn nx affected --target=test --all
+              run: yarn nx run-many --target=test --all
             - name: run all e2e tests
-              run: yarn nx affected --target=e2e --all
+              run: yarn nx run-many --target=e2e --all --parallel 1
