@@ -1,11 +1,11 @@
 import { existsSync, readFileSync } from "fs-extra"
 import { resolve } from "path"
 
-import { ConfigFileNonSensitiveArgs, NonSensitiveArgs, Operation } from "../types"
+import { ConfigFileNonSensitiveArgs, NonSensitiveArgs } from "./types"
 import { ExecutorContext } from "@nrwl/devkit"
 import { load } from "js-yaml"
 import { PhraseClientConfig } from "./phrase"
-import { BuildExecutorSchema } from "../schema"
+import { BuildExecutorSchema } from "../build/schema"
 
 interface ConfigFileFormat {
     phrase: {
@@ -20,7 +20,8 @@ export interface InternalPhraseConfig extends NonSensitiveArgs {
 }
 
 function readConfig(context: ExecutorContext) {
-    if (!context.projectName) {
+    const projectName = context.projectName
+    if (!projectName) {
         throw new Error("project name not set in context")
     }
 
@@ -38,9 +39,16 @@ function readConfig(context: ExecutorContext) {
         console.info(`Config file does not have 'phrase' root node.`)
         error = true
     }
-    const configSection = configFileContent.phrase[context.projectName]
+    const configSection = configFileContent.phrase[projectName]
     if (!configSection) {
-        console.info(`Config file has no configuration section for project '${context.projectName}'`)
+        console.info(`Config file has no configuration section for project '${projectName}'`)
+        error = true
+    }
+
+    if (!configSection.access_token) {
+        console.error(
+            `'access_token' not set in .phrase.yml for translation target in project.json of project '${projectName}'.`
+        )
         error = true
     }
 
@@ -48,18 +56,13 @@ function readConfig(context: ExecutorContext) {
         process.exit(-1)
     }
 
-    return configFileContent.phrase[context.projectName]
+    return configSection
 }
 
-const requiredConfigs: Record<Operation, string[]> = {
-    push: ["accessToken", "projectId", "uploadLanguageId"],
-    pull: ["accessToken", "projectId", "output"],
-}
-
-function validateConfig(config: Record<string, unknown>, projectName: string, operation: Operation) {
+function validateConfig(config: Record<string, unknown>, projectName: string, requiredConfigProperties: string[]) {
     let error = false
 
-    requiredConfigs[operation]
+    requiredConfigProperties
         .filter((requiredProperty) => !config[requiredProperty])
         .forEach((requiredProperty) => {
             console.info(
@@ -74,7 +77,7 @@ function validateConfig(config: Record<string, unknown>, projectName: string, op
 export function getConfig(
     options: BuildExecutorSchema,
     context: ExecutorContext,
-    operation: Operation
+    requiredConfigurationProperties: string[]
 ): InternalPhraseConfig {
     if (!context.projectName) {
         throw new Error("project name not set in context")
@@ -102,7 +105,7 @@ export function getConfig(
     // override options from config file / cli with the ones from the project.json
     Object.assign(config, { ...config, ...options })
 
-    validateConfig(config, context.projectName, operation)
+    validateConfig(config, context.projectName, requiredConfigurationProperties)
 
     const phraseClientConfig: PhraseClientConfig = { token: rawConfig.access_token }
 

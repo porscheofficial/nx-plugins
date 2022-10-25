@@ -1,5 +1,3 @@
-export type Operation = "push" | "pull"
-
 export interface ConfigFileNonSensitiveArgs {
     project_id: string
     branch?: string

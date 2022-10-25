@@ -5,6 +5,11 @@
             "implementation": "./src/executors/build/executor",
             "schema": "./src/executors/build/schema.json",
             "description": "Translation pull"
+        },
+        "unused": {
+            "implementation": "./src/executors/find-unused/executor",
+            "schema": "./src/executors/unused/schema.json",
+            "description": "Find unused translations"
         }
     }
 }

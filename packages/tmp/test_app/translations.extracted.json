@@ -1,0 +1,18 @@
+{
+  "a.b.c.d": {
+    "col": 8,
+    "defaultMessage": "Foo",
+    "end": 222,
+    "file": "/Users/konqi/git/Porsche/nx-plugins/packages/nx-phrase/test/sample.ts",
+    "line": 8,
+    "start": 160
+  },
+  "sampleId": {
+    "col": 14,
+    "defaultMessage": "Sample Message",
+    "end": 150,
+    "file": "/Users/konqi/git/Porsche/nx-plugins/packages/nx-phrase/test/sample.ts",
+    "line": 4,
+    "start": 76
+  }
+}

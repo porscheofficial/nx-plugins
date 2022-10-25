@@ -7,13 +7,7 @@ import { InternalPhraseConfig } from "./config"
 import { compile, extract } from "./formatjs"
 import { PhraseClient } from "./phrase"
 
-export async function push(config: InternalPhraseConfig, context: ExecutorContext) {
-    if (!context.projectName) {
-        throw new Error("project name not set in context")
-    }
-
-    const { projectName } = context
-
+export async function extractTranslations(config: InternalPhraseConfig, projectName: string) {
     // Use nx-phrase home as temporary storage
     const pluginHome = resolve(__dirname, "../../../../")
 
@@ -42,6 +36,10 @@ export async function push(config: InternalPhraseConfig, context: ExecutorContex
     await compile({ inputFile: extractionOutputFile, outputFile: compilationOutputFile })
     console.log(`Compiled translations into ${relative(process.cwd(), compilationOutputFile)}`)
 
+    return compilationOutputFile
+}
+
+export async function uploadTranslations(config: InternalPhraseConfig, compilationOutputFile: string) {
     // Upload translations to phrase
     const phrase = new PhraseClient(config.phraseClientConfig)
     await phrase.upload(
@@ -55,4 +53,15 @@ export async function push(config: InternalPhraseConfig, context: ExecutorContex
         await readFile(compilationOutputFile)
     )
     console.log(`Uploaded translations to phrase.`)
+}
+
+export async function push(config: InternalPhraseConfig, context: ExecutorContext) {
+    const { projectName } = context
+
+    if (!projectName) {
+        throw new Error("project name not set in context")
+    }
+
+    const compilationOutputFile = await extractTranslations(config, projectName)
+    await uploadTranslations(config, compilationOutputFile)
 }
