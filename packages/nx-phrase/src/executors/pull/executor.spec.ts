@@ -4,9 +4,9 @@ import { ExecutorContext } from "@nrwl/devkit"
 import nock from "nock"
 
 import executor from "./executor"
-import type { BuildExecutorSchema } from "./schema"
+import { NonSensitiveArgs } from "../lib/types"
 
-const options: BuildExecutorSchema = {}
+const options: Partial<NonSensitiveArgs> = {}
 
 const TEST_ASSETS_DIR = resolve(__dirname, "../../../test")
 
@@ -44,28 +44,5 @@ describe("Pull", () => {
         nockForProject("other_project")
         const output = await executor({ ...options, projectId: "other_project" }, context)
         expect(output.success).toBe(true)
-    })
-})
-
-describe("Push", () => {
-    it("can push", async () => {
-        nock("https://api.phrase.com/v2")
-            .post(/\/projects\/[^/]+\/uploads/i)
-            .matchHeader("Authorization", /token .*/)
-            .query(true)
-            .reply(201, {})
-
-        const context = {
-            root: TEST_ASSETS_DIR,
-            projectName: "test_app",
-            workspace: { projects: { test_app: { root: TEST_ASSETS_DIR, sourceRoot: TEST_ASSETS_DIR } } } as unknown,
-        } as ExecutorContext
-
-        const output = await executor({ operation: "push" }, context)
-        expect(output.success).toBe(true)
-    })
-
-    afterEach(() => {
-        expect(nock.isDone()).toBe(true)
     })
 })

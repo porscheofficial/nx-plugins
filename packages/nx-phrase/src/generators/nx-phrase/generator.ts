@@ -35,6 +35,9 @@ export default async function (tree: Tree, options: NxPhraseGeneratorSchema) {
                 push: {
                     operation: "push",
                 },
+                unused: {
+                    operation: "find-unused",
+                },
             },
         },
     }

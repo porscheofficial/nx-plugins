@@ -7,17 +7,12 @@
     "description": "l10n utils",
     "type": "object",
     "properties": {
-        "operation": {
-            "description": "pull or push",
-            "type": "string",
-            "default": "pull"
-        },
         "projectId": {
             "description": "",
             "type": "string"
         },
         "branch": {
-            "description": "(optional) branch in phrase",
+            "description": "",
             "type": "string"
         },
         "fileFormat": {
@@ -42,14 +37,6 @@
         },
         "ignoreGlob": {
             "description": "",
-            "type": "string"
-        },
-        "sourceKeyTransformer": {
-            "description": "(optional) Path to file exporting a transform function for keys extracted from the source",
-            "type": "string"
-        },
-        "phraseKeyTransformer": {
-            "description": "(optional) Path to file exporting a transform function for keys downloaded from phrase",
             "type": "string"
         }
     },

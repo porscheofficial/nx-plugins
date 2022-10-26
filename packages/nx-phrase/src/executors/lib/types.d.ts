@@ -7,6 +7,8 @@ export interface ConfigFileNonSensitiveArgs {
     source_root?: string
     source_glob?: string
     ignore_glob?: string
+    source_key_transformer: string
+    phrase_key_transformer: string
 }
 
 export interface NonSensitiveArgs {
@@ -18,4 +20,6 @@ export interface NonSensitiveArgs {
     sourceRoot: string
     sourceGlob: string
     ignoreGlob: string
+    sourceKeyTransformer: string
+    phraseKeyTransformer: string
 }

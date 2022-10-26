@@ -4,9 +4,9 @@ import { ExecutorContext } from "@nrwl/devkit"
 import nock from "nock"
 
 import executor from "./executor"
-import type { UnusedExecutorSchema } from "./schema"
+import { NonSensitiveArgs } from "../lib/types"
 
-const options: UnusedExecutorSchema = {
+const options: Partial<NonSensitiveArgs> = {
     phraseKeyTransformer: "./filter.js",
     sourceKeyTransformer: "./filter.js",
 }

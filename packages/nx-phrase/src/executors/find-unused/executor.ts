@@ -5,7 +5,7 @@ import { resolve } from "path"
 import { getConfig, InternalPhraseConfig } from "../lib/config"
 import { downloadTranslations } from "../lib/pull"
 import { extractTranslations } from "../lib/push"
-import type { UnusedExecutorSchema } from "./schema"
+import { NonSensitiveArgs } from "../lib/types"
 
 const requiredConfigProperties = ["projectId", "output"]
 
@@ -58,7 +58,7 @@ async function getKeysFromPhrase(config: InternalPhraseConfig, transformer: tran
     return [...phraseKeysSet]
 }
 
-export default async function runExecutor(options: UnusedExecutorSchema, context: ExecutorContext) {
+export default async function runExecutor(options: Partial<NonSensitiveArgs>, context: ExecutorContext) {
     const config: InternalPhraseConfig = getConfig(options, context, requiredConfigProperties)
     const { projectName } = context
 

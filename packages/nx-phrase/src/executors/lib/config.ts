@@ -100,6 +100,8 @@ export function getConfig(
         sourceRoot: rawConfig.source_root ?? sourceRoot,
         sourceGlob: rawConfig.source_glob ?? "**/*.{ts,tsx}",
         uploadLanguageId: rawConfig.upload_language_id || "default",
+        sourceKeyTransformer: rawConfig.source_key_transformer,
+        phraseKeyTransformer: rawConfig.phrase_key_transformer,
     }
 
     // override options from config file / cli with the ones from the project.json

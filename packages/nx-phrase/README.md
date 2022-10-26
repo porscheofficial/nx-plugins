@@ -40,10 +40,13 @@ To make the executor available via nx commands, add this to your `targets` secti
       },
       "push": {
         "operation": "push"
+      },
+      "unused": {
+        "operation": "find-unused"
       }
     }
   }
-}
+
 ```
 
 Technically the `pull` configuration is unnecessary because pull the the default action of the executor, but it helps to keep things fluid.
@@ -79,9 +82,12 @@ phrase:
 | ..project_id | projectId | Id of the phrase project to use. Can be found in Phrase project settings under API, or the "☁️ ID"-button on the project overview. | ✅ | - |
 | ..output | output | Where downloaded translations files will be placed relative to your project's root directory. | ✅ | - |
 | ..upload_language_id | uploadLanguageId | Language ID to use when uploading new translations. Can be found in the API section when editing a language. Do yourself a favor and make this a language you will never edit in phrase. | ✅ | - |
-| ..file_format | fileFormat | File format to download from phrase. See [supported platforms and formats](https://help.phrase.com/help/supported-platforms-and-formats) | ❌ | react_simple_json |
+| ..file_format | fileFormat | File format to download from phrase. See [supported platforms and formats](https://help.phrase.com/help/supported-platforms-and-formats) | ❌ | `react_simple_json` |
 | ..branch | branch | In case you're working with branches in phrase. | ❌ | - |
 | ..source_root | sourceRoot | Source root override, in case some of your sources are not located in your project's sourceRoot. | ❌ | Your project's sourceRoot directory (as specified in project.json) |
+| ..source_glob | sourceGlob | Glob pattern used to search for files containing translations | ❌ | `**/*.{ts,tsx}` |
+| ..source_key_transformer | sourceKeyTransformer | Path to a javascript file exporting a default function that is called for each key extracted from the source to allow transformation of said key | ❌ | - |
+| ..phrase_key_transformer | phraseKeyTransformer | Path to a javascript file exporting a default function that is called for each key downloaded from phrase to allow transformation of said key | ❌ | - |
 
 All but the `access_token` property can also be specified in the options section of the nx-phrase target in your project.json. The `access_token` should never be committed to the repository, so it's not possible to specify it in the project.json
 

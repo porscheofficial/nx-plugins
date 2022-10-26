@@ -6,6 +6,16 @@
             "schema": "./src/executors/build/schema.json",
             "description": "Translation pull"
         },
+        "pull": {
+            "implementation": "./src/executors/pull/executor",
+            "schema": "./src/executors/pull/schema.json",
+            "description": "Translation pull"
+        },
+        "push": {
+            "implementation": "./src/executors/push/executor",
+            "schema": "./src/executors/push/schema.json",
+            "description": "Translation push"
+        },
         "unused": {
             "implementation": "./src/executors/find-unused/executor",
             "schema": "./src/executors/unused/schema.json",
