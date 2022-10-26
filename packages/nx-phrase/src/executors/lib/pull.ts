@@ -41,6 +41,8 @@ export async function writeTranslations(translations: TranslationsMap, config: I
 }
 
 export async function pull(config: InternalPhraseConfig) {
+    console.log(`Translations will be written to ${config.output}.`)
+
     const translations = await downloadTranslations(config)
     await writeTranslations(translations, config)
 }

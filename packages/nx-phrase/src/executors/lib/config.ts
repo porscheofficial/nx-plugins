@@ -59,7 +59,7 @@ function readConfig(context: ExecutorContext) {
     return configSection
 }
 
-function validateConfig(config: Record<string, unknown>, projectName: string, requiredConfigProperties: string[]) {
+function validateConfig(config: NonSensitiveArgs, projectName: string, requiredConfigProperties: string[]) {
     let error = false
 
     requiredConfigProperties
@@ -90,22 +90,27 @@ export function getConfig(
     const { sourceRoot } = projects[projectName]
 
     const rawConfig = readConfig(context)
-    const output = resolve(context.workspace.projects[context.projectName].root, rawConfig.output ?? ".")
+    // get output first, so it does not get overwritten
+    const output = resolve(
+        context.workspace.projects[context.projectName].root,
+        // use from project.json -> config file -> fallback
+        options.output ?? rawConfig.output ?? "./translations"
+    )
     const config = {
         branch: rawConfig.branch,
         fileFormat: rawConfig.file_format ?? "react_simple_json",
         ignoreGlob: rawConfig.ignore_glob ?? "**/*.d.ts",
-        output,
         projectId: rawConfig.project_id,
         sourceRoot: rawConfig.source_root ?? sourceRoot,
         sourceGlob: rawConfig.source_glob ?? "**/*.{ts,tsx}",
         uploadLanguageId: rawConfig.upload_language_id || "default",
         sourceKeyTransformer: rawConfig.source_key_transformer,
         phraseKeyTransformer: rawConfig.phrase_key_transformer,
-    }
+    } as NonSensitiveArgs
 
     // override options from config file / cli with the ones from the project.json
-    Object.assign(config, { ...config, ...options })
+    // (output is hanlded separately because it has to be prefixed with the project root)
+    Object.assign(config, { ...config, ...options, output })
 
     validateConfig(config, context.projectName, requiredConfigurationProperties)
 
