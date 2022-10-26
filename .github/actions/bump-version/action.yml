@@ -1,0 +1,69 @@
+name: Bump package version
+description: Bump version according to semantic versioning rules
+
+inputs:
+    package:
+        description: "Package name to publish to npm"
+        required: true
+        type: choice
+        options:
+            - "nx-phrase"
+            - "nx-oagen"
+    type:
+        description: "Type of version bump (major release, minor release or patch)"
+        required: true
+        type: choice
+        options:
+            - PATCH
+            - MINOR
+            - MAJOR
+
+runs:
+    using: "composite"
+    steps:
+        - name: 🔎 Parse version & calculate new version
+          working-directory: ./packages/${{ github.event.inputs.package }}
+          shell: bash
+          env:
+              BUMP: ${{ inputs.type }}
+          run: |
+              echo "::notice::Bump version for a $BUMP release"
+              # parse semver (thx to https://gist.github.com/bitmvr/9ed42e1cc2aac799b123de9fdc59b016)
+              VERSION="$(cat package.json | jq -r '.version')"
+              VERSION="${VERSION#[vV]}"
+              VERSION_MAJOR="${VERSION%%\.*}"
+              VERSION_MINOR="${VERSION#*.}"
+              VERSION_MINOR="${VERSION_MINOR%.*}"
+              VERSION_PATCH="${VERSION##*.}"
+              # Bump versions according to semver
+              NEW_VERSION_MAJOR=$VERSION_MAJOR
+              NEW_VERSION_MINOR=$VERSION_MINOR
+              NEW_VERSION_PATCH=$VERSION_PATCH
+              if [ "$BUMP" = "MAJOR" ];then NEW_VERSION_MAJOR=$(expr $NEW_VERSION_MAJOR + 1);NEW_VERSION_MINOR=0;NEW_VERSION_PATCH=0;fi
+              if [ "$BUMP" = "MINOR" ];then NEW_VERSION_MINOR=$(expr $NEW_VERSION_MINOR + 1);NEW_VERSION_PATCH=0;fi
+              if [ "$BUMP" = "PATCH" ];then NEW_VERSION_PATCH=$(expr $NEW_VERSION_PATCH + 1);fi
+              # Show results
+              echo "::notice::Current Version: $VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH"
+              echo "::notice::New Version: $NEW_VERSION_MAJOR.$NEW_VERSION_MINOR.$NEW_VERSION_PATCH"
+              # Store version information for other actions
+              echo "VERSION_MAJOR=$VERSION_MAJOR" >> $GITHUB_ENV
+              echo "VERSION_MINOR=$VERSION_MINOR" >> $GITHUB_ENV
+              echo "VERSION_PATCH=$VERSION_PATCH" >> $GITHUB_ENV
+              echo "NEW_VERSION_MAJOR=$NEW_VERSION_MAJOR" >> $GITHUB_ENV
+              echo "NEW_VERSION_MINOR=$NEW_VERSION_MINOR" >> $GITHUB_ENV
+              echo "NEW_VERSION_PATCH=$NEW_VERSION_PATCH" >> $GITHUB_ENV
+        - name: Write Version
+          working-directory: ./packages/${{ github.event.inputs.package }}
+          shell: bash
+          env:
+              PACKAGE: ${{ inputs.package }}
+          run: |
+              NEW_VERSION="${{ env.NEW_VERSION_MAJOR }}.${{ env.NEW_VERSION_MINOR }}.${{ env.NEW_VERSION_PATCH }}"
+              echo "::notice::Writing $NEW_VERSION to $PACKAGE's package.json"
+              jq ".version = \"$NEW_VERSION\"" package.json > package.json.tmp
+              mv package.json.tmp package.json
+        # - name: Test version
+        #   working-directory: ./packages/${{ github.event.inputs.package }}
+        #   shell: bash
+        #   run: |
+        #       echo "${{ env.NEW_VERSION_MAJOR }}.${{ env.NEW_VERSION_MINOR }}.${{ env.NEW_VERSION_PATCH }}"

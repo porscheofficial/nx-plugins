@@ -1,0 +1,36 @@
+name: Publish package to NPM
+description: Publishes an nx package to npm
+
+inputs:
+    package:
+        description: "Package name to publish to npm"
+        required: true
+        type: choice
+        options:
+            - "nx-phrase"
+            - "nx-oagen"
+    npmToken:
+        description: "Token used to publish to npm"
+        required: true
+        type: string
+
+runs:
+    using: "composite"
+    steps:
+        - name: install node
+          uses: actions/setup-node@v3
+          with:
+              node-version: 16
+              registry-url: "https://registry.npmjs.org"
+        - name: 🌎 install dependencies
+          shell: bash
+          run: yarn install --frozen-lockfile
+        - name: 🏗 Build
+          shell: bash
+          run: yarn nx build ${{ github.event.inputs.package }}
+        - name: Publish package to NPM 📦
+          working-directory: ./dist/packages/${{ github.event.inputs.package }}
+          shell: bash
+          run: npm publish
+          env:
+              NODE_AUTH_TOKEN: ${{ inputs.npmToken }}

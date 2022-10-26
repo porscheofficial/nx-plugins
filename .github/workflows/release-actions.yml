@@ -1,0 +1,44 @@
+name: Publish package to NPM 📦
+# on:
+#   release:
+#     types: [published]
+# on: [pull_request]
+on:
+    workflow_dispatch:
+        inputs:
+            package:
+                description: "Package name to publish to npm"
+                required: true
+                type: choice
+                options:
+                    - "nx-phrase"
+                    - "nx-oagen"
+            type:
+                description: "Type of version bump (major release, minor release or patch)"
+                required: true
+                type: choice
+                options:
+                    - PATCH
+                    - MINOR
+                    - MAJOR
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out repository code
+              uses: actions/checkout@v3
+            - name: Bump Version
+              uses: ./.github/actions/bump-version
+              with:
+                  package: ${{ github.event.inputs.package }}
+                  type: ${{ github.event.inputs.type }}
+            - name: Publish package 📦
+              uses: ./.github/actions/publish-package
+              with:
+                  package: ${{ github.event.inputs.package }}
+                  npmToken: ${{ secrets.NPM_TOKEN }}
+            - name: Push Changes
+              uses: ./.github/actions/push
+              with:
+                  message: Automatic ${{ github.event.inputs.type }} version bump
