@@ -1,18 +1,19 @@
 import { ExecutorContext } from "@nrwl/devkit"
 
-import { getConfig, InternalPhraseConfig } from "./lib/config"
-import { pull } from "./lib/pull"
-import { push } from "./lib/push"
+import { default as pull } from "../pull/executor"
+import { default as push } from "../push/executor"
+import { default as findUnused } from "../find-unused/executor"
 import type { BuildExecutorSchema } from "./schema"
 
 export default async function runExecutor(options: BuildExecutorSchema, context: ExecutorContext) {
     const operation = options.operation ?? "pull"
-    const config: InternalPhraseConfig = getConfig(options, context, operation)
 
     if (operation === "push") {
-        await push(config, context)
+        await push(options, context)
+    } else if (operation === "find-unused") {
+        await findUnused(options, context)
     } else {
-        await pull(config)
+        await pull(options, context)
     }
 
     return { success: true }

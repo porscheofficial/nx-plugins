@@ -3,7 +3,9 @@ import { resolve } from "path"
 import { InternalPhraseConfig } from "./config"
 import { PhraseClient } from "./phrase"
 
-export async function pull(config: InternalPhraseConfig) {
+type TranslationsMap = Record<string, string>
+
+export async function downloadTranslations(config: InternalPhraseConfig): Promise<TranslationsMap> {
     const phrase = new PhraseClient(config.phraseClientConfig)
     const availableLocales = await phrase.localesListAll({ project_id: config.projectId })
 
@@ -22,6 +24,10 @@ export async function pull(config: InternalPhraseConfig) {
         }
     }
 
+    return translations
+}
+
+export async function writeTranslations(translations: TranslationsMap, config: InternalPhraseConfig) {
     // recreate L10n directory
     await remove(config.output)
     await mkdirs(config.output)
@@ -32,4 +38,9 @@ export async function pull(config: InternalPhraseConfig) {
         const filePath = resolve(config.output, `${locale}.json`)
         await writeFile(filePath, translations[locale])
     }
+}
+
+export async function pull(config: InternalPhraseConfig) {
+    const translations = await downloadTranslations(config)
+    await writeTranslations(translations, config)
 }

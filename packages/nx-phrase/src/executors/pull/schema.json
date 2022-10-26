@@ -1,0 +1,28 @@
+{
+    "version": 2,
+    "outputCapture": "direct-nodejs",
+    "$schema": "http://json-schema.org/schema",
+    "cli": "nx",
+    "title": "phrase executor",
+    "description": "l10n utils",
+    "type": "object",
+    "properties": {
+        "projectId": {
+            "description": "",
+            "type": "string"
+        },
+        "branch": {
+            "description": "",
+            "type": "string"
+        },
+        "fileFormat": {
+            "description": "",
+            "type": "string"
+        },
+        "output": {
+            "description": "",
+            "type": "string"
+        }
+    },
+    "required": []
+}

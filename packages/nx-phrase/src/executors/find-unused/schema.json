@@ -1,0 +1,40 @@
+{
+    "version": 2,
+    "outputCapture": "direct-nodejs",
+    "$schema": "http://json-schema.org/schema",
+    "cli": "nx",
+    "title": "phrase executor",
+    "description": "find unused translations",
+    "type": "object",
+    "properties": {       
+        "projectId": {
+            "description": "",
+            "type": "string"
+        },
+        "sourceKeyTransformer": {
+            "description": "path to file containing function to transform keys extracted from source into comparable state",
+            "type": "string"
+        },
+        "phraseKeyTransformer": {
+            "description": "path to file containing function to transform keys downlaaded from phrase into comparable state",
+            "type": "string"
+        },
+        "branch": {
+            "description": "",
+            "type": "string"
+        },
+        "sourceRoot": {
+            "description": "",
+            "type": "string"
+        },
+        "sourceGlob": {
+            "description": "",
+            "type": "string"
+        },
+        "ignoreGlob": {
+            "description": "",
+            "type": "string"
+        }
+    },
+    "required": []
+}
