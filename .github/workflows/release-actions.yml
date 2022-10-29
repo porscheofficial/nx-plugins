@@ -41,4 +41,4 @@ jobs:
             - name: Push Changes
               uses: ./.github/actions/push
               with:
-                  message: Automatic ${{ github.event.inputs.type }} version bump
+                  message: "${{ github.event.inputs.package }}: 🤖 Automatic ${{ github.event.inputs.type }} version bump to ${{ env.NEW_VERSION }}"
