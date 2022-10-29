@@ -1,4 +1,6 @@
-import { spawn } from "child_process"
+import { extract as formatjsExtract, compile as formatjsCompile } from "@formatjs/cli-lib"
+import glob from "glob"
+import { writeFileSync } from "fs"
 
 export async function extract({
     sourceGlob,
@@ -11,47 +13,14 @@ export async function extract({
     sourceRoot: string
     outputFile: string
 }) {
-    return new Promise<void>((resolve, reject) => {
-        const extract = spawn(
-            "./node_modules/.bin/formatjs",
-            [
-                "extract",
-                `${sourceRoot}/${sourceGlob}`, // `./${projectRoot}/src/**/*.{ts,tsx}`,
-                ...(ignoreGlob
-                    ? [
-                          "--ignore",
-                          `${sourceRoot}/${ignoreGlob}`, //`./${projectRoot}/src/**/*.d.ts`,
-                      ]
-                    : []),
-                "--out-file",
-                outputFile,
-                "--extract-source-location",
-            ],
-            { stdio: "inherit" }
-        )
+    const files = glob.sync(`${sourceRoot}/${sourceGlob}`)
+    const ignoredFiles = glob.sync(`${sourceRoot}/${ignoreGlob}`)
+    const filteredFiles = files.filter((file) => !ignoredFiles.includes(file))
 
-        extract.on("exit", (code) => {
-            if (code === 0) {
-                resolve()
-            } else {
-                reject()
-            }
-        })
-    })
+    const extracted = await formatjsExtract(filteredFiles, {})
+    writeFileSync(outputFile, extracted, {})
 }
 
 export async function compile({ inputFile, outputFile }: { inputFile: string; outputFile: string }) {
-    return new Promise<void>((resolve, reject) => {
-        const compile = spawn("./node_modules/.bin/formatjs", ["compile", inputFile, "--out-file", outputFile], {
-            stdio: "inherit",
-        })
-
-        compile.on("exit", (code) => {
-            if (code === 0) {
-                resolve()
-            } else {
-                reject()
-            }
-        })
-    })
+    writeFileSync(outputFile, await formatjsCompile([inputFile], {}))
 }

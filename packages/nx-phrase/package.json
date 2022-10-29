@@ -13,7 +13,8 @@
   "peerDependencies": {
     "js-yaml": "^4.x",
     "form-data": "^4.x",
-    "@formatjs/cli": "^4.x",
+    "@formatjs/cli-lib": "^5.x",
+    "glob": "^8.x",
     "fs-extra": "^10.x"
   }
 }
