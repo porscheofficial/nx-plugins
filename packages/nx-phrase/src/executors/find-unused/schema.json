@@ -8,7 +8,7 @@
     "type": "object",
     "properties": {       
         "projectId": {
-            "description": "",
+            "description": "Id of translation project in phrase",
             "type": "string"
         },
         "sourceKeyTransformer": {
@@ -36,5 +36,5 @@
             "type": "string"
         }
     },
-    "required": []
+    "required": ["projectId"]
 }

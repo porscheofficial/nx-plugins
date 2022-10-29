@@ -1,20 +1,14 @@
 import { relative, resolve } from "path"
 
 import { ExecutorContext } from "@nrwl/devkit"
-import { remove, readFile } from "fs-extra"
+import { readFile } from "fs-extra"
 
 import { InternalPhraseConfig } from "./config"
 import { compile, extract } from "./formatjs"
 import { PhraseClient } from "./phrase"
+import { prepareOutput } from "../../utils"
 
-export async function extractTranslations(config: InternalPhraseConfig, projectName: string) {
-    // Use nx-phrase home as temporary storage
-    const pluginHome = resolve(__dirname, "../../../../")
-
-    // Clean up temporary files.
-    const tmpDir = resolve(pluginHome, "tmp", projectName)
-    await remove(tmpDir)
-
+export async function extractTranslations(config: InternalPhraseConfig, outputPath: string) {
     // Extract translations from sources
     console.log(`Extracting translations from files in '${config.sourceRoot}'`)
     console.log(`using source glob '${config.sourceGlob}'`)
@@ -22,7 +16,8 @@ export async function extractTranslations(config: InternalPhraseConfig, projectN
         console.log(`Ignoring '${config.ignoreGlob}'`)
     }
 
-    const extractionOutputFile = `${tmpDir}/translations.extracted.json`
+    const extractionOutputFile = `${outputPath}/translations.extracted.json`
+
     await extract({
         sourceRoot: config.sourceRoot,
         outputFile: extractionOutputFile,
@@ -32,7 +27,7 @@ export async function extractTranslations(config: InternalPhraseConfig, projectN
     console.log(`Extracted translations into ${relative(process.cwd(), extractionOutputFile)}`)
 
     // Compile extracted translation into target format
-    const compilationOutputFile = resolve(tmpDir, "translations.compiled.json")
+    const compilationOutputFile = resolve(outputPath, "translations.compiled.json")
     await compile({ inputFile: extractionOutputFile, outputFile: compilationOutputFile })
     console.log(`Compiled translations into ${relative(process.cwd(), compilationOutputFile)}`)
 
@@ -62,6 +57,7 @@ export async function push(config: InternalPhraseConfig, context: ExecutorContex
         throw new Error("project name not set in context")
     }
 
-    const compilationOutputFile = await extractTranslations(config, projectName)
+    const outputPath = prepareOutput(context.root, "push")
+    const compilationOutputFile = await extractTranslations(config, outputPath)
     await uploadTranslations(config, compilationOutputFile)
 }

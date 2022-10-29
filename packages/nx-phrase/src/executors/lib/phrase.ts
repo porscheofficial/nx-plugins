@@ -1,5 +1,5 @@
 import FormData from "form-data"
-import { requestUrl } from "./request"
+import { RequestError, requestUrl } from "./request"
 
 const BASE_URL = process.env.PHRASE_API_BASE_URL ?? "https://api.phrase.com/v2"
 
@@ -101,15 +101,57 @@ export class PhraseClient {
             }
         }
 
-        const response = await requestUrl(url, {
-            headers: {
-                Authorization: `token ${this.credentials.token}`,
-            },
-            successStatus: 200,
-            errorMessagePrefix: `Failed to download translations for ${id}`,
-        })
+        const downloadRequest = () =>
+            requestUrl(url, {
+                headers: {
+                    Authorization: `token ${this.credentials.token}`,
+                },
+                successStatus: 200,
+                errorMessagePrefix: `Failed to download translations for ${id}`,
+            })
 
-        return response
+        return this.retry(downloadRequest, (e: unknown, attempt: number) => {
+            if (e instanceof RequestError) {
+                // handle concurrency limit exceeded
+                if (e.statusCode === 429 && attempt < 5) {
+                    console.log(`Retrying due to concurrency`)
+                    return true
+                }
+            }
+
+            return false
+        })
+    }
+
+    async retry<T extends () => R | Promise<R>, R>(
+        callbackFn: T,
+        shouldRetry: (error: unknown, attempt: number) => boolean | Promise<boolean>
+    ): Promise<R> {
+        let attempt = 0
+        let repeat = false
+        do {
+            try {
+                attempt++
+                return await callbackFn()
+            } catch (e) {
+                repeat = await shouldRetry(e, attempt)
+                if (!repeat) {
+                    throw e
+                }
+
+                const sleepFor = 2 ** attempt * 1000
+                await this.sleepHelper(sleepFor)
+            }
+        } while (repeat)
+
+        throw new Error("Unreachable")
+    }
+
+    /**
+     * Sleep helper can be overwritten with jest.mock to allow proper testing  of retry
+     */
+    async sleepHelper(time: number) {
+        await new Promise((resolve) => setTimeout(resolve, time))
     }
 
     public async upload(
@@ -147,6 +189,34 @@ export class PhraseClient {
             requestBody: body,
             successStatus: 201,
             errorMessagePrefix: "Failed to upload default translations",
+        })
+    }
+
+    public async deleteKey({
+        project_id,
+        key_id,
+        ...otherArgs
+    }: {
+        project_id: string
+        key_id: string
+        branch?: string
+    }) {
+        const url = new URL(`${this.#baseUrl}/projects/${project_id}/keys/${key_id}`)
+        const body = new FormData()
+        for (const argName in otherArgs) {
+            if (otherArgs[argName]) {
+                url.searchParams.set(argName, otherArgs[argName])
+            }
+        }
+
+        await requestUrl(url, {
+            headers: {
+                Authorization: `token ${this.credentials.token}`,
+            },
+            method: "DELETE",
+            requestBody: body,
+            successStatus: 204,
+            errorMessagePrefix: "Failed to delete key",
         })
     }
 }

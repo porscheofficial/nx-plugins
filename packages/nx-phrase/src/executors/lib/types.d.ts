@@ -22,4 +22,5 @@ export interface NonSensitiveArgs {
     ignoreGlob: string
     sourceKeyTransformer: string
     phraseKeyTransformer: string
+    inputFile: string
 }

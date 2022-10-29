@@ -71,7 +71,7 @@ function validateConfig(config: NonSensitiveArgs, projectName: string, requiredC
             error = true
         })
 
-    return error
+    return !error
 }
 
 export function getConfig(
@@ -112,7 +112,9 @@ export function getConfig(
     // (output is hanlded separately because it has to be prefixed with the project root)
     Object.assign(config, { ...config, ...options, output })
 
-    validateConfig(config, context.projectName, requiredConfigurationProperties)
+    if (!validateConfig(config, context.projectName, requiredConfigurationProperties)) {
+        throw new Error("Invalid configuration")
+    }
 
     const phraseClientConfig: PhraseClientConfig = { token: rawConfig.access_token }
 

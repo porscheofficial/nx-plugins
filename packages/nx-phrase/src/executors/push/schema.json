@@ -8,18 +8,10 @@
     "type": "object",
     "properties": {
         "projectId": {
-            "description": "",
+            "description": "Id of translation project in phrase",
             "type": "string"
         },
         "branch": {
-            "description": "",
-            "type": "string"
-        },
-        "fileFormat": {
-            "description": "",
-            "type": "string"
-        },
-        "output": {
             "description": "",
             "type": "string"
         },
@@ -40,5 +32,5 @@
             "type": "string"
         }
     },
-    "required": []
+    "required": ["projectId", "uploadLanguageId"]
 }
