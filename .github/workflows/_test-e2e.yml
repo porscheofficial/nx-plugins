@@ -26,3 +26,4 @@ jobs:
               with:
                   baseRef: ${{ inputs.baseRef }}
                   target: e2e
+                  parallel: 1

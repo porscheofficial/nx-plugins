@@ -8,7 +8,7 @@
     "type": "object",
     "properties": {       
         "projectId": {
-            "description": "",
+            "description": "Id of translation project in phrase",
             "type": "string"
         },
         "sourceKeyTransformer": {
@@ -34,7 +34,11 @@
         "ignoreGlob": {
             "description": "",
             "type": "string"
+        },
+        "workingDirectory": {
+            "description": "",
+            "type": "string"
         }
     },
-    "required": []
+    "required": ["projectId"]
 }

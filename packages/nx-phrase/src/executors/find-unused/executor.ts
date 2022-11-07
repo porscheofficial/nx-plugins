@@ -1,6 +1,7 @@
 import { ExecutorContext } from "@nrwl/devkit"
-import { existsSync } from "fs"
+import { existsSync, writeFileSync } from "fs"
 import { resolve } from "path"
+import { prepareOutput } from "../../utils"
 
 import { getConfig, InternalPhraseConfig } from "../lib/config"
 import { downloadTranslations } from "../lib/pull"
@@ -31,11 +32,11 @@ async function loadTransformer(path: string) {
 
 async function getKeysFromSource(
     config: InternalPhraseConfig,
-    projectName: string,
-    transformer: transformTranslationKeyFn
+    transformer: transformTranslationKeyFn,
+    outputFilePath: string
 ) {
     // extracts current translations
-    const compiledTranslationsFilePath = await extractTranslations(config, projectName)
+    const compiledTranslationsFilePath = await extractTranslations(config, outputFilePath)
     const compiledTranslationKeys = Object.keys((await import(compiledTranslationsFilePath)).default)
 
     // apply optional filter
@@ -67,7 +68,12 @@ export default async function runExecutor(options: Partial<NonSensitiveArgs>, co
         ? await loadTransformer(resolve(context.root, options.sourceKeyTransformer))
         : defaultTransformKeyFn
 
-    const sourceTranslationKeys = await getKeysFromSource(config, projectName, sourceKeyTransformer)
+    const outputPath = await prepareOutput({
+        projectRoot: context.root,
+        subfolder: "unused",
+        workingDirectory: options.workingDirectory,
+    })
+    const sourceTranslationKeys = await getKeysFromSource(config, sourceKeyTransformer, outputPath)
 
     // extract and prepare keys from phrase
     const phraseKeyTransformer = options.phraseKeyTransformer
@@ -81,7 +87,19 @@ export default async function runExecutor(options: Partial<NonSensitiveArgs>, co
     const unusedKeys = phraseTranslationKeys.filter((key) => !sourceTranslationKeys.includes(key))
 
     // tell difference
-    console.log({ notUploadedYet, unusedKeys })
+    const unusedKeysFilename = `${outputPath}/${projectName}.unused-keys.json`
+    writeFileSync(unusedKeysFilename, JSON.stringify(unusedKeys, null, 2), {
+        flag: "w",
+    })
+    console.log(`Unused keys written to: ${unusedKeysFilename}`)
+
+    const pendingUploadKeysFilename = `${outputPath}/${projectName}.pending-upload-keys.json`
+    writeFileSync(pendingUploadKeysFilename, JSON.stringify(notUploadedYet, null, 2), {
+        flag: "w",
+    })
+    console.log(`Keys pending upload written to: ${pendingUploadKeysFilename}`)
+
+    console.log(`${context.targetName} ${context.configurationName}`)
 
     return { success: true }
 }

@@ -8,7 +8,7 @@
     "type": "object",
     "properties": {
         "projectId": {
-            "description": "",
+            "description": "Id of translation project in phrase",
             "type": "string"
         },
         "branch": {
@@ -22,7 +22,11 @@
         "output": {
             "description": "",
             "type": "string"
+        },
+        "workingDirectory": {
+            "description": "",
+            "type": "string"
         }
     },
-    "required": []
+    "required": ["projectId", "output"]
 }

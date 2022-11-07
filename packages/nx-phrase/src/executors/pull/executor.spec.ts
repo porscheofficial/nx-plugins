@@ -5,6 +5,7 @@ import nock from "nock"
 
 import executor from "./executor"
 import { NonSensitiveArgs } from "../lib/types"
+import { PhraseClient } from "../lib/phrase"
 
 const options: Partial<NonSensitiveArgs> = {}
 
@@ -16,12 +17,22 @@ function nockForProject(projectId = "project_id") {
         .matchHeader("Authorization", /token .*/)
         .query({ per_page: 20 })
         .replyWithFile(200, `${TEST_ASSETS_DIR}/localesListResponse.json`)
+
+        .get(/\/projects\/[^/]+\/locales\/[^/]+\/download/)
+        .matchHeader("Authorization", /token .*/)
+        .query({ file_format: "react_simple_json" })
+        .thrice()
+        .reply(429, { message: "Concurrency limit exceeded" })
+
         .get(/\/projects\/[^/]+\/locales\/[^/]+\/download/)
         .matchHeader("Authorization", /token .*/)
         .query({ file_format: "react_simple_json" })
         .twice()
         .replyWithFile(200, `${TEST_ASSETS_DIR}/localeDownloadResponse.json`)
 }
+
+// Remove actual sleep from implementation
+jest.spyOn(PhraseClient.prototype, "sleepHelper").mockImplementation(() => Promise.resolve())
 
 describe("Pull", () => {
     const context = {

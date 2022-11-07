@@ -1,4 +1,6 @@
 import { Tree, names, getWorkspaceLayout, offsetFromRoot } from "@nrwl/devkit"
+import { existsSync, mkdirSync, writeFileSync } from "fs"
+import { resolve } from "path"
 
 export const NPM_SCOPE = "@porscheofficial"
 
@@ -31,4 +33,35 @@ export function normalizeOptions(tree: Tree, options): NormalizedSchema {
         defaultPrefix,
         offsetFromRoot: offsetFromRoot(projectRoot),
     }
+}
+
+export function prepareOutput({
+    projectRoot,
+    subfolder = null,
+    workingDirectory = ".nx-phrase",
+}: {
+    projectRoot: string
+    subfolder?: string
+    workingDirectory?: string
+}) {
+    const baseOutputPath = resolve(projectRoot, workingDirectory)
+    if (!existsSync(baseOutputPath)) {
+        mkdirSync(baseOutputPath)
+    }
+
+    const ignoreFile = resolve(baseOutputPath, ".gitignore")
+    if (!existsSync(ignoreFile)) {
+        writeFileSync(ignoreFile, "**/*.*", { flag: "wx" })
+    }
+
+    if (subfolder) {
+        const outputPath = resolve(baseOutputPath, subfolder)
+        if (!existsSync(outputPath)) {
+            mkdirSync(outputPath, { recursive: true })
+        }
+
+        return outputPath
+    }
+
+    return baseOutputPath
 }

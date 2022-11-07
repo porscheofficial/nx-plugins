@@ -71,7 +71,7 @@ function validateConfig(config: NonSensitiveArgs, projectName: string, requiredC
             error = true
         })
 
-    return error
+    return !error
 }
 
 export function getConfig(
@@ -87,12 +87,12 @@ export function getConfig(
         projectName,
         workspace: { projects },
     } = context
-    const { sourceRoot } = projects[projectName]
+    const { sourceRoot, root } = projects[projectName]
 
     const rawConfig = readConfig(context)
     // get output first, so it does not get overwritten
     const output = resolve(
-        context.workspace.projects[context.projectName].root,
+        root,
         // use from project.json -> config file -> fallback
         options.output ?? rawConfig.output ?? "./translations"
     )
@@ -112,7 +112,9 @@ export function getConfig(
     // (output is hanlded separately because it has to be prefixed with the project root)
     Object.assign(config, { ...config, ...options, output })
 
-    validateConfig(config, context.projectName, requiredConfigurationProperties)
+    if (!validateConfig(config, projectName, requiredConfigurationProperties)) {
+        throw new Error("Invalid configuration")
+    }
 
     const phraseClientConfig: PhraseClientConfig = { token: rawConfig.access_token }
 

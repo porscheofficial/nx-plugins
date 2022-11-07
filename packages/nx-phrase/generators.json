@@ -3,10 +3,10 @@
     "name": "nx-phrase",
     "version": "0.0.1",
     "generators": {
-        "nx-phrase": {
-            "factory": "./src/generators/nx-phrase/generator",
-            "schema": "./src/generators/nx-phrase/schema.json",
-            "description": "nx-phrase generator"
+        "configuration": {
+            "factory": "./src/generators/configuration/generator",
+            "schema": "./src/generators/configuration/schema.json",
+            "description": "generator to setup nx-phrase it existing project"
         }
     }
 }

@@ -5,6 +5,7 @@ import nock from "nock"
 
 import executor from "./executor"
 import { NonSensitiveArgs } from "../lib/types"
+import { NPM_SCOPE } from "../../utils"
 
 const options: Partial<NonSensitiveArgs> = {
     phraseKeyTransformer: "./filter.js",
@@ -30,6 +31,11 @@ describe("find unused", () => {
     const context = {
         root: TEST_ASSETS_DIR,
         projectName: "test_app",
+        targetName: "translation",
+        configurationName: "unused",
+        target: {
+            executor: `${NPM_SCOPE}/nx-phrase:build`,
+        },
         workspace: { projects: { test_app: { root: TEST_ASSETS_DIR, sourceRoot: TEST_ASSETS_DIR } } } as unknown,
     } as ExecutorContext
 

@@ -49,16 +49,18 @@ runs:
               echo "VERSION_MAJOR=$VERSION_MAJOR" >> $GITHUB_ENV
               echo "VERSION_MINOR=$VERSION_MINOR" >> $GITHUB_ENV
               echo "VERSION_PATCH=$VERSION_PATCH" >> $GITHUB_ENV
+              echo "VERSION=$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH" >> $GITHUB_ENV
               echo "NEW_VERSION_MAJOR=$NEW_VERSION_MAJOR" >> $GITHUB_ENV
               echo "NEW_VERSION_MINOR=$NEW_VERSION_MINOR" >> $GITHUB_ENV
               echo "NEW_VERSION_PATCH=$NEW_VERSION_PATCH" >> $GITHUB_ENV
+              echo "NEW_VERSION=$NEW_VERSION_MAJOR.$NEW_VERSION_MINOR.$NEW_VERSION_PATCH" >> $GITHUB_ENV
         - name: Write Version
           working-directory: ./packages/${{ github.event.inputs.package }}
           shell: bash
           env:
               PACKAGE: ${{ inputs.package }}
           run: |
-              NEW_VERSION="${{ env.NEW_VERSION_MAJOR }}.${{ env.NEW_VERSION_MINOR }}.${{ env.NEW_VERSION_PATCH }}"
+              NEW_VERSION="${{ env.NEW_VERSION }}"
               echo "::notice::Writing $NEW_VERSION to $PACKAGE's package.json"
               jq ".version = \"$NEW_VERSION\"" package.json > package.json.tmp
               mv package.json.tmp package.json

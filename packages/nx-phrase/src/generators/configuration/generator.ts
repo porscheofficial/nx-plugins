@@ -15,7 +15,6 @@ export default async function (tree: Tree, options: NxPhraseGeneratorSchema) {
     const { projectName } = options
 
     const { peerDependencies } = readJson(tree, `node_modules/${NPM_SCOPE}/nx-phrase/package.json`)
-    console.log(peerDependencies)
     const installDependencies = addDependenciesToPackageJson(tree, {}, peerDependencies)
     if (installDependencies) {
         await installDependencies()
@@ -27,7 +26,9 @@ export default async function (tree: Tree, options: NxPhraseGeneratorSchema) {
         ...projectConfiguration.targets,
         translation: {
             executor: "@porscheofficial/nx-phrase:build",
-            options: {},
+            options: {
+                projectId: "<put phrase project id here>",
+            },
             configurations: {
                 pull: {
                     operation: "pull",

@@ -3,6 +3,15 @@ import * as httpsRequest from "https"
 import * as httpRequest from "http"
 type RequestOptions = httpsRequest.RequestOptions | httpRequest.RequestOptions
 
+export class RequestError extends Error {
+    readonly statusCode: number
+
+    constructor({ prefix, message, statusCode }: { prefix: string; message: string; statusCode: number }) {
+        super(`${prefix}: [${statusCode} - ${message}]`)
+        this.statusCode = statusCode
+    }
+}
+
 export function request({
     successStatus,
     requestBody,
@@ -49,7 +58,13 @@ export function request({
                 })
                 res.on("error", (e) => {
                     // response error
-                    reject(e)
+                    reject(
+                        new RequestError({
+                            prefix: errorMessagePrefix,
+                            message: `${e}`,
+                            statusCode: -1,
+                        })
+                    )
                 })
                 res.on("end", () => {
                     if (res.statusCode === successStatus) {
@@ -58,18 +73,38 @@ export function request({
                         try {
                             const { message } = JSON.parse(data)
 
-                            return reject(`${errorMessagePrefix}: [${res.statusCode} - ${message}]`)
+                            return reject(
+                                new RequestError({ prefix: errorMessagePrefix, message, statusCode: res.statusCode })
+                            )
                         } catch (e) {
-                            return reject(`${errorMessagePrefix}: [${res.statusCode}]`)
+                            return reject(
+                                new RequestError({
+                                    prefix: errorMessagePrefix,
+                                    message: `${e}`,
+                                    statusCode: res.statusCode,
+                                })
+                            )
                         }
                     } else {
-                        return reject(`${errorMessagePrefix}: [${res.statusCode}]`)
+                        return reject(
+                            new RequestError({
+                                prefix: errorMessagePrefix,
+                                message: `Response did not contain body`,
+                                statusCode: res.statusCode,
+                            })
+                        )
                     }
                 })
             })
-            .on("error", (e) => {
+            .on("error", (e: unknown) => {
                 // request error
-                reject(e)
+                reject(
+                    new RequestError({
+                        prefix: errorMessagePrefix,
+                        message: `Unable to send request: ${e}`,
+                        statusCode: -1,
+                    })
+                )
             })
         if (bodyBuffer) {
             req.write(bodyBuffer)
