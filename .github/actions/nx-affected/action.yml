@@ -10,8 +10,16 @@ inputs:
         description: Nx target to run
         required: true
 
+    parallel:
+        description: How many parallel tests to run
+        required: false
+
 runs:
     using: "composite"
     steps:
-        - run: yarn nx affected --base ${{ inputs.baseRef }} --target ${{ inputs.target }}
+        - if: ${{ inputs.parallel != '' }}
+          run: yarn nx affected --base ${{ inputs.baseRef }} --target ${{ inputs.target }} --parallel=${{ inputs.parallel }}
+          shell: bash
+        - if: ${{ inputs.parallel == '' }}
+          run: yarn nx affected --base ${{ inputs.baseRef }} --target ${{ inputs.target }}
           shell: bash

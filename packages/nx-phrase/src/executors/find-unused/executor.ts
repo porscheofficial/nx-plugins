@@ -68,7 +68,11 @@ export default async function runExecutor(options: Partial<NonSensitiveArgs>, co
         ? await loadTransformer(resolve(context.root, options.sourceKeyTransformer))
         : defaultTransformKeyFn
 
-    const outputPath = await prepareOutput(context.root, "unused")
+    const outputPath = await prepareOutput({
+        projectRoot: context.root,
+        subfolder: "unused",
+        workingDirectory: options.workingDirectory,
+    })
     const sourceTranslationKeys = await getKeysFromSource(config, sourceKeyTransformer, outputPath)
 
     // extract and prepare keys from phrase
@@ -94,6 +98,8 @@ export default async function runExecutor(options: Partial<NonSensitiveArgs>, co
         flag: "w",
     })
     console.log(`Keys pending upload written to: ${pendingUploadKeysFilename}`)
+
+    console.log(`${context.targetName} ${context.configurationName}`)
 
     return { success: true }
 }

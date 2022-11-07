@@ -39,7 +39,7 @@ export async function uploadTranslations(config: InternalPhraseConfig, compilati
     const phrase = new PhraseClient(config.phraseClientConfig)
     await phrase.upload(
         {
-            project_id: config.projectId,
+            projectId: config.projectId,
             locale_id: config.uploadLanguageId,
             file_format: "react_simple_json",
             update_translations: true,
@@ -57,7 +57,11 @@ export async function push(config: InternalPhraseConfig, context: ExecutorContex
         throw new Error("project name not set in context")
     }
 
-    const outputPath = prepareOutput(context.root, "push")
+    const outputPath = prepareOutput({
+        projectRoot: context.root,
+        subfolder: "push",
+        workingDirectory: config.workingDirectory,
+    })
     const compilationOutputFile = await extractTranslations(config, outputPath)
     await uploadTranslations(config, compilationOutputFile)
 }

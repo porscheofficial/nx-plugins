@@ -30,7 +30,12 @@
         "ignoreGlob": {
             "description": "",
             "type": "string"
+        },
+        "workingDirectory": {
+            "description": "",
+            "type": "string"
         }
+
     },
     "required": ["projectId", "uploadLanguageId"]
 }

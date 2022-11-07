@@ -9,7 +9,6 @@ import {
     runNxCommand,
     readFile,
 } from "@nrwl/nx-plugin/testing"
-import { spawnSync } from "child_process"
 import serve, { buffer, send } from "micro"
 import { load, dump } from "js-yaml"
 import { IncomingMessage, Server } from "http"
@@ -94,7 +93,7 @@ async function setupTestProject() {
     expect(projectJson).toBeTruthy()
 
     // add translation actions to project configuration
-    await runNxCommand(`generate @porscheofficial/nx-phrase:nx-phrase ${testProject}`)
+    await runNxCommand(`generate @porscheofficial/nx-phrase:configuration ${testProject}`)
     runPackageManagerInstall()
 }
 

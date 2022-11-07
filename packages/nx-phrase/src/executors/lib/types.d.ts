@@ -23,4 +23,5 @@ export interface NonSensitiveArgs {
     sourceKeyTransformer: string
     phraseKeyTransformer: string
     inputFile: string
+    workingDirectory: string
 }

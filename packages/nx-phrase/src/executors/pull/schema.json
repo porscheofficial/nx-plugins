@@ -22,6 +22,10 @@
         "output": {
             "description": "",
             "type": "string"
+        },
+        "workingDirectory": {
+            "description": "",
+            "type": "string"
         }
     },
     "required": ["projectId", "output"]

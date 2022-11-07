@@ -7,14 +7,14 @@ type TranslationsMap = Record<string, string>
 
 export async function downloadTranslations(config: InternalPhraseConfig): Promise<TranslationsMap> {
     const phrase = new PhraseClient(config.phraseClientConfig)
-    const availableLocales = await phrase.localesListAll({ project_id: config.projectId })
+    const availableLocales = await phrase.localesListAll({ projectId: config.projectId })
 
     const translations: Record<string, string> = {}
     for (const locale of availableLocales) {
         const { id, name } = locale
         if (id && name) {
             const localeData = await phrase.localesDownload({
-                project_id: config.projectId,
+                projectId: config.projectId,
                 id,
                 branch: config.branch,
                 file_format: config.fileFormat,

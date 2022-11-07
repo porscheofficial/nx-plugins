@@ -35,8 +35,16 @@ export function normalizeOptions(tree: Tree, options): NormalizedSchema {
     }
 }
 
-export function prepareOutput(projectRoot: string, subfolder: string = null) {
-    const baseOutputPath = resolve(projectRoot, ".nx-phrase")
+export function prepareOutput({
+    projectRoot,
+    subfolder = null,
+    workingDirectory = ".nx-phrase",
+}: {
+    projectRoot: string
+    subfolder?: string
+    workingDirectory?: string
+}) {
+    const baseOutputPath = resolve(projectRoot, workingDirectory)
     if (!existsSync(baseOutputPath)) {
         mkdirSync(baseOutputPath)
     }

@@ -22,6 +22,18 @@ interface PhraseLocale {
     }
 }
 
+interface PhraseKey {
+    id: string
+    name: string
+    description: string
+    name_hash: string
+    plural: boolean
+    max_characters_allowed: number
+    tags: string[]
+    created_at: string
+    updated_at: string
+}
+
 export interface PhraseClientConfig {
     token: string
 }
@@ -40,16 +52,17 @@ export class PhraseClient {
     }
 
     public async localesList({
-        project_id,
+        projectId,
         ...optionalArgs
     }: {
-        project_id: string
+        projectId: string
+        // These arguments are snake cased because that is how the api expects them
         page?: number
         per_page?: number
         sort_by?: string
         branch?: string
     }): Promise<PhraseLocale[]> {
-        const url = new URL(`${this.#baseUrl}/projects/${project_id}/locales`)
+        const url = new URL(`${this.#baseUrl}/projects/${projectId}/locales`)
         for (const argName in optionalArgs) {
             if (optionalArgs[argName]) {
                 url.searchParams.set(argName, optionalArgs[argName])
@@ -83,25 +96,26 @@ export class PhraseClient {
     }
 
     public async localesDownload({
-        project_id,
+        projectId: projectId,
         id,
         ...otherArgs
     }: {
-        project_id: string
+        projectId: string
         id: string
+        // These arguments are snake cased because that is how the api expects them
         file_format: string
         branch?: string
     }): Promise<string> {
         console.log("Downloading translation for", id)
 
-        const url = new URL(`${this.#baseUrl}/projects/${project_id}/locales/${id}/download`)
+        const url = new URL(`${this.#baseUrl}/projects/${projectId}/locales/${id}/download`)
         for (const argName in otherArgs) {
             if (otherArgs[argName]) {
                 url.searchParams.set(argName, otherArgs[argName])
             }
         }
 
-        const downloadRequest = () =>
+        const downloadRequestFactory = () =>
             requestUrl(url, {
                 headers: {
                     Authorization: `token ${this.credentials.token}`,
@@ -110,7 +124,7 @@ export class PhraseClient {
                 errorMessagePrefix: `Failed to download translations for ${id}`,
             })
 
-        return this.retry(downloadRequest, (e: unknown, attempt: number) => {
+        return this.retry(downloadRequestFactory, (e: unknown, attempt: number) => {
             if (e instanceof RequestError) {
                 // handle concurrency limit exceeded
                 if (e.statusCode === 429 && attempt < 5) {
@@ -123,7 +137,7 @@ export class PhraseClient {
         })
     }
 
-    async retry<T extends () => R | Promise<R>, R>(
+    private async retry<T extends () => R | Promise<R>, R>(
         callbackFn: T,
         shouldRetry: (error: unknown, attempt: number) => boolean | Promise<boolean>
     ): Promise<R> {
@@ -156,10 +170,11 @@ export class PhraseClient {
 
     public async upload(
         {
-            project_id,
+            projectId,
             ...otherArgs
         }: {
-            project_id: string
+            projectId: string
+            // These arguments are snake cased because that is how the api expects them
             locale_id: string
             update_translations?: boolean
             skip_upload_tags?: boolean
@@ -168,7 +183,7 @@ export class PhraseClient {
         },
         fileContent: string | Buffer
     ) {
-        const url = new URL(`${this.#baseUrl}/projects/${project_id}/uploads`)
+        const url = new URL(`${this.#baseUrl}/projects/${projectId}/uploads`)
         const body = new FormData()
         for (const argName in otherArgs) {
             if (otherArgs[argName]) {
@@ -192,17 +207,44 @@ export class PhraseClient {
         })
     }
 
-    public async deleteKey({
-        project_id,
-        key_id,
+    public async resolveKeyIdByName({
+        projectId,
+        keyName,
         ...otherArgs
     }: {
-        project_id: string
-        key_id: string
+        projectId: string
+        keyName: string
         branch?: string
     }) {
-        const url = new URL(`${this.#baseUrl}/projects/${project_id}/keys/${key_id}`)
-        const body = new FormData()
+        const url = new URL(`${this.#baseUrl}/projects/${projectId}/keys/search`)
+        url.searchParams.set("q", `name:${keyName}`)
+        for (const argName in otherArgs) {
+            if (otherArgs[argName]) {
+                url.searchParams.set(argName, otherArgs[argName])
+            }
+        }
+
+        const response = await requestUrl(url, {
+            method: "POST",
+            headers: {
+                Authorization: `token ${this.credentials.token}`,
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            successStatus: 200,
+            errorMessagePrefix: "Failed to load locales",
+        })
+
+        const foundKeys = JSON.parse(response) as PhraseKey[]
+        return foundKeys.map((key) => key.id)
+    }
+
+    /**
+     * curl -X DELETE "https://api.phrase.com/v2/projects/231c5aeb7c0bd038e0a097f2dc5e80a8/keys/937f71237d1b81cfd51b251be98a8e45" \
+ -H "Authorization:  token ec0208fcf3825ca46911ea6c5e576229f3d2a469cc572e351ac33cd238ce29c2" 
+     */
+    public async deleteKey({ projectId, keyId, ...otherArgs }: { projectId: string; keyId: string; branch?: string }) {
+        const url = new URL(`${this.#baseUrl}/projects/${projectId}/keys/${keyId}`)
         for (const argName in otherArgs) {
             if (otherArgs[argName]) {
                 url.searchParams.set(argName, otherArgs[argName])
@@ -210,11 +252,10 @@ export class PhraseClient {
         }
 
         await requestUrl(url, {
+            method: "DELETE",
             headers: {
                 Authorization: `token ${this.credentials.token}`,
             },
-            method: "DELETE",
-            requestBody: body,
             successStatus: 204,
             errorMessagePrefix: "Failed to delete key",
         })

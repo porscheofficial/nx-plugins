@@ -96,12 +96,12 @@ export function request({
                     }
                 })
             })
-            .on("error", (e) => {
+            .on("error", (e: unknown) => {
                 // request error
                 reject(
                     new RequestError({
                         prefix: errorMessagePrefix,
-                        message: `Unable to send request`,
+                        message: `Unable to send request: ${e}`,
                         statusCode: -1,
                     })
                 )
