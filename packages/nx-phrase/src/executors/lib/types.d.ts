@@ -11,6 +11,8 @@ export interface NonSensitiveArgs {
     phraseKeyTransformer: string
     sourceKeyFilter: string
     phraseKeyFilter: string
+    useSourceLocaleAsFallback: boolean
+    useFallbackLocale: boolean
     inputFile: string
     workingDirectory: string
 }

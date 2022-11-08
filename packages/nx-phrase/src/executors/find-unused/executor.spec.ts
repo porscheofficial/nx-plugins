@@ -23,7 +23,7 @@ function nockForProject(projectId = "project_id") {
         .get(/\/projects\/[^/]+\/locales\/[^/]+\/download/)
         .matchHeader("Authorization", /token .*/)
         .query({ file_format: "react_simple_json" })
-        .twice()
+        .thrice()
         .replyWithFile(200, `${TEST_ASSETS_DIR}/localeDownloadResponse.json`)
 }
 

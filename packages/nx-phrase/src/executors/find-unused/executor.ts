@@ -4,7 +4,7 @@ import { resolve } from "path"
 import { prepareOutput } from "../../utils"
 
 import { getConfig, InternalPhraseConfig } from "../lib/config"
-import { downloadTranslations } from "../lib/pull"
+import { downloadTranslations, listLocales } from "../lib/pull"
 import { extractTranslations } from "../lib/push"
 import { NonSensitiveArgs } from "../lib/types"
 
@@ -45,7 +45,8 @@ async function getKeysFromSource(config: InternalPhraseConfig, outputFilePath: s
 
 async function getKeysFromPhrase(config: InternalPhraseConfig) {
     // downloads available translations
-    const localeToRawTranslations = await downloadTranslations({ ...config, fileFormat: "react_simple_json" })
+    const locales = await listLocales(config)
+    const localeToRawTranslations = await downloadTranslations({ ...config, fileFormat: "react_simple_json" }, locales)
     const keysInPhrase = new Set<string>()
     Object.keys(localeToRawTranslations).forEach((locale) =>
         Object.keys(JSON.parse(localeToRawTranslations[locale])).forEach((key) => keysInPhrase.add(key))

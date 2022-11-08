@@ -95,6 +95,7 @@ This operation pulls (i.e. downloads) translations from phrase into the configur
 | output | Where downloaded translations files will be placed relative to your project's root directory. | ❌ | `./translations` |
 | fileFormat | File format to download from phrase. See [supported platforms and formats](https://help.phrase.com/help/supported-platforms-and-formats) | ❌ | `react_simple_json` |
 | branch | In case you're working with branches in phrase. | ❌ | - |
+| useSourceLocaleAsFallback | Emulate phrase fallback_locale behavior via source_locale field. This only works with `react_simple_json` fileFormat | ❌ | false |
 
 #### Push
 

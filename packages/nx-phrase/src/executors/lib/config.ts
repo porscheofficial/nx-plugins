@@ -109,6 +109,8 @@ export function getConfig(
         phraseKeyTransformer: options.phraseKeyTransformer,
         sourceKeyFilter: options.sourceKeyFilter,
         phraseKeyFilter: options.phraseKeyFilter,
+        useFallbackLocale: options.useFallbackLocale,
+        useSourceLocaleAsFallback: options.useSourceLocaleAsFallback,
     } as NonSensitiveArgs
 
     if (!validateConfig(config, projectName, requiredConfigurationProperties)) {
