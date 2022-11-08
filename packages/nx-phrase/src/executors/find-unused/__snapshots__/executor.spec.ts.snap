@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`find unused filters before applying transformers: keys downloaded from phrase and FILTERED that are NOT used in the source (anymore) 1`] = `
+Array [
+  "a.c.d.e",
+  "a.d.e.c",
+  "o.l.e.o",
+  "K.u.i.l",
+]
+`;
+
+exports[`find unused filters before applying transformers: keys from the source and FILTERED that are NOT uploaded in phrase yet 1`] = `
+Array [
+  "sampleId",
+]
+`;
+
+exports[`find unused filters keys: keys from phrase that are NOT valid according to the filter function 1`] = `
+Array [
+  "K.u.i.l[",
+  "K.u.i.l]",
+  "K.u.i.l[]",
+  "K.u.i.l[,a]",
+  "K.u.i.l[a,]",
+  "K.u.i.l[ ]",
+  "K.u.i.l[ , a ]",
+  "K.u.i.l[ a , ]",
+]
+`;
+
+exports[`find unused filters keys: keys from source that are NOT valid according to the filter function 1`] = `
+Array [
+  "a.b.c.d{",
+]
+`;
+
+exports[`find unused transforms keys: keys downloaded from phrase that are NOT used in the source (anymore) 1`] = `
+Array [
+  "a.c.d.e",
+  "a.d.e.c",
+  "o.l.e.o",
+  "K.u.i.l",
+  "K.u.i.l[",
+  "K.u.i.l]",
+]
+`;
+
+exports[`find unused transforms keys: keys from the source that are NOT uploaded in phrase yet 1`] = `
+Array [
+  "a.b.c.d{",
+  "sampleId",
+]
+`;

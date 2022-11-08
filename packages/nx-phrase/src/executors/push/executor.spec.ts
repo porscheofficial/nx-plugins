@@ -4,8 +4,13 @@ import { ExecutorContext } from "@nrwl/devkit"
 import nock from "nock"
 
 import executor from "./executor"
+import { NonSensitiveArgs } from "../lib/types"
 
 const TEST_ASSETS_DIR = resolve(__dirname, "../../../test")
+
+const options: Partial<NonSensitiveArgs> = {
+    projectId: "projectId",
+}
 
 describe("Push", () => {
     it("can push", async () => {
@@ -21,7 +26,7 @@ describe("Push", () => {
             workspace: { projects: { test_app: { root: TEST_ASSETS_DIR, sourceRoot: TEST_ASSETS_DIR } } } as unknown,
         } as ExecutorContext
 
-        const output = await executor({}, context)
+        const output = await executor(options, context)
         expect(output.success).toBe(true)
     })
 

@@ -4,5 +4,16 @@
     "a.d.e.c": "FooBar",
     "o.l.e.o": "BarFoo",
     "K.u.i.l": "I have spoken",
-    "K.u.i.l[extended]": "I have spoken"
+    "K.u.i.l[extended]": "I have spoken",
+    "K.u.i.l[": "I have spoken",
+    "K.u.i.l]": "I have spoken",
+    "K.u.i.l[]": "I have spoken",
+    "K.u.i.l[,a]": "I have spoken",
+    "K.u.i.l[a,]": "I have spoken",
+    "K.u.i.l[ ]": "I have spoken",
+    "K.u.i.l[ , a ]": "I have spoken",
+    "K.u.i.l[ a , ]": "I have spoken",
+    "K.u.i.l[b,a]": "I have spoken",
+    "K.u.i.l[a,b]": "I have spoken"
+
 }

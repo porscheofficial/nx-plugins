@@ -19,6 +19,14 @@
             "description": "path to file containing function to transform keys downlaaded from phrase into comparable state",
             "type": "string"
         },
+        "sourceKeyFilter": {
+            "description": "path to file containing function to filter keys extracted from source",
+            "type": "string"
+        },
+        "phraseKeyFilter": {
+            "description": "path to file containing function to filter keys downlaaded from phrase",
+            "type": "string"
+        },
         "branch": {
             "description": "",
             "type": "string"

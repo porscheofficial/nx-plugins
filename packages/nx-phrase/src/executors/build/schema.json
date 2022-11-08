@@ -51,6 +51,14 @@
         "phraseKeyTransformer": {
             "description": "(optional) Path to file exporting a transform function for keys downloaded from phrase",
             "type": "string"
+        },
+        "sourceKeyFilter": {
+            "description": "path to file containing function to filter keys extracted from source",
+            "type": "string"
+        },
+        "phraseKeyFilter": {
+            "description": "path to file containing function to filter keys downlaaded from phrase",
+            "type": "string"
         }
     },
     "required": []
