@@ -97,13 +97,14 @@ async function setupTestProject() {
     runPackageManagerInstall()
 }
 
-describe("nx-phrase e2e configured via $configurationLocation", () => {
+describe("nx-phrase e2e", () => {
     const postMock = jest.fn()
     let mockserver: Awaited<ReturnType<typeof startMockServer>>
 
     beforeAll(async () => {
         await setupTestProject()
         mockserver = await startMockServer(postMock)
+        prepareProjectJsonSetup()
     }, 120000)
 
     afterAll(async () => {
@@ -114,27 +115,17 @@ describe("nx-phrase e2e configured via $configurationLocation", () => {
         jest.clearAllMocks()
     })
 
-    describe.each`
-        configurationLocation | configurePlugin
-        ${".phrase.yml"}      | ${preparePhraseYmlSetup}
-        ${"project.json"}     | ${prepareProjectJsonSetup}
-    `("configured via $configurationLocation", ({ configurePlugin }) => {
-        beforeAll(() => {
-            configurePlugin()
-        })
+    it("should successfully push translations", async () => {
+        await runNxCommandAsync(`run ${testProject}:translation:push`)
 
-        it("should successfully push translations", async () => {
-            await runNxCommandAsync(`run ${testProject}:translation:push`)
+        expect(postMock).toHaveBeenCalledTimes(1)
+    }, 120000)
 
-            expect(postMock).toHaveBeenCalledTimes(1)
-        }, 120000)
-
-        it.todo(
-            "should successfully pull translations"
-            // , async () => {
-            //     const { stderr, stdout } = await runNxCommandAsync(`run ${testProject}:translation:pull`)
-            //     console.log(stdout, stderr)
-            // }
-        )
-    })
+    it.todo(
+        "should successfully pull translations"
+        // , async () => {
+        //     const { stderr, stdout } = await runNxCommandAsync(`run ${testProject}:translation:pull`)
+        //     console.log(stdout, stderr)
+        // }
+    )
 })
