@@ -9,4 +9,8 @@ defineMessages({
         id: "a.b.c.d",
         defaultMessage: "Foo",
     },
+    bar: {
+        id: "a.b.c.d{",
+        defaultMessage: "Foo",
+    },
 })

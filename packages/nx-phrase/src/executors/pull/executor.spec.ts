@@ -6,8 +6,12 @@ import nock from "nock"
 import executor from "./executor"
 import { NonSensitiveArgs } from "../lib/types"
 import { PhraseClient } from "../lib/phrase"
+import { readFileSync } from "fs"
 
-const options: Partial<NonSensitiveArgs> = {}
+const options: Partial<NonSensitiveArgs> = {
+    projectId: "projectId",
+    output: ".nx-phrase/translations",
+}
 
 const TEST_ASSETS_DIR = resolve(__dirname, "../../../test")
 
@@ -49,11 +53,8 @@ describe("Pull", () => {
         nockForProject(options.projectId)
         const output = await executor(options, context)
         expect(output.success).toBe(true)
-    })
 
-    it("can override configuration options via project.json", async () => {
-        nockForProject("other_project")
-        const output = await executor({ ...options, projectId: "other_project" }, context)
-        expect(output.success).toBe(true)
+        expect(readFileSync(resolve(TEST_ASSETS_DIR, ".nx-phrase/translations", "fr-BE.json"))).toMatchSnapshot()
+        expect(readFileSync(resolve(TEST_ASSETS_DIR, ".nx-phrase/translations", "fr-CA.json"))).toMatchSnapshot()
     })
 })

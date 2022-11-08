@@ -6,10 +6,10 @@ import nock from "nock"
 import executor from "./executor"
 import { NonSensitiveArgs } from "../lib/types"
 import { NPM_SCOPE } from "../../utils"
+import { readFileSync } from "fs"
 
 const options: Partial<NonSensitiveArgs> = {
-    phraseKeyTransformer: "./filter.js",
-    sourceKeyTransformer: "./filter.js",
+    projectId: "projectId",
 }
 
 const TEST_ASSETS_DIR = resolve(__dirname, "../../../test")
@@ -54,5 +54,77 @@ describe("find unused", () => {
         nockForProject("other_project")
         const output = await executor({ ...options, projectId: "other_project" }, context)
         expect(output.success).toBe(true)
+    })
+
+    it("transforms keys", async () => {
+        nockForProject(options.projectId)
+
+        const myOptions = { ...options, phraseKeyTransformer: "./transform.js", sourceKeyTransformer: "./transform.js" }
+
+        const output = await executor(myOptions, context)
+        expect(output.success).toBe(true)
+
+        // Validate output files
+        expect(
+            JSON.parse(readFileSync(resolve(TEST_ASSETS_DIR, ".nx-phrase/unused/test_app.unused-keys.json")).toString())
+        ).toMatchSnapshot("keys downloaded from phrase that are NOT used in the source (anymore)")
+
+        expect(
+            JSON.parse(
+                readFileSync(resolve(TEST_ASSETS_DIR, ".nx-phrase/unused/test_app.pending-upload-keys.json")).toString()
+            )
+        ).toMatchSnapshot("keys from the source that are NOT uploaded in phrase yet")
+    })
+
+    it("filters keys", async () => {
+        nockForProject(options.projectId)
+
+        const myOptions = { ...options, phraseKeyFilter: "./filter.js", sourceKeyFilter: "./filter.js" }
+
+        const output = await executor(myOptions, context)
+        expect(output.success).toBe(true)
+
+        // Validate output files
+        expect(
+            JSON.parse(
+                readFileSync(
+                    resolve(TEST_ASSETS_DIR, ".nx-phrase/unused/test_app.filtered-source-keys.json")
+                ).toString()
+            )
+        ).toMatchSnapshot("keys from source that are NOT valid according to the filter function")
+
+        expect(
+            JSON.parse(
+                readFileSync(
+                    resolve(TEST_ASSETS_DIR, ".nx-phrase/unused/test_app.filtered-phrase-keys.json")
+                ).toString()
+            )
+        ).toMatchSnapshot("keys from phrase that are NOT valid according to the filter function")
+    })
+
+    it("filters before applying transformers", async () => {
+        nockForProject(options.projectId)
+
+        const myOptions = {
+            ...options,
+            phraseKeyFilter: "./filter.js",
+            sourceKeyFilter: "./filter.js",
+            phraseKeyTransformer: "./transform.js",
+            sourceKeyTransformer: "./transform.js",
+        }
+
+        const output = await executor(myOptions, context)
+        expect(output.success).toBe(true)
+
+        // Validate output files
+        expect(
+            JSON.parse(readFileSync(resolve(TEST_ASSETS_DIR, ".nx-phrase/unused/test_app.unused-keys.json")).toString())
+        ).toMatchSnapshot("keys downloaded from phrase and FILTERED that are NOT used in the source (anymore)")
+
+        expect(
+            JSON.parse(
+                readFileSync(resolve(TEST_ASSETS_DIR, ".nx-phrase/unused/test_app.pending-upload-keys.json")).toString()
+            )
+        ).toMatchSnapshot("keys from the source and FILTERED that are NOT uploaded in phrase yet")
     })
 })

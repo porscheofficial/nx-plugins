@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "fs-extra"
 import { resolve } from "path"
 
-import { ConfigFileNonSensitiveArgs, NonSensitiveArgs } from "./types"
+import { NonSensitiveArgs } from "./types"
 import { ExecutorContext } from "@nrwl/devkit"
 import { load } from "js-yaml"
 import { PhraseClientConfig } from "./phrase"
@@ -11,7 +11,7 @@ interface ConfigFileFormat {
     phrase: {
         [appName: string]: {
             access_token: string
-        } & ConfigFileNonSensitiveArgs
+        }
     }
 }
 
@@ -66,7 +66,7 @@ function validateConfig(config: NonSensitiveArgs, projectName: string, requiredC
         .filter((requiredProperty) => !config[requiredProperty])
         .forEach((requiredProperty) => {
             console.info(
-                `Configuration property '${requiredProperty}' not set in .phrase.yml or options for translation target in project.json of project '${projectName}'.`
+                `Configuration property '${requiredProperty}' not set for translation target in project.json of project '${projectName}'.`
             )
             error = true
         })
@@ -94,23 +94,22 @@ export function getConfig(
     const output = resolve(
         root,
         // use from project.json -> config file -> fallback
-        options.output ?? rawConfig.output ?? "./translations"
+        options.output ?? "./translations"
     )
     const config = {
-        branch: rawConfig.branch,
-        fileFormat: rawConfig.file_format ?? "react_simple_json",
-        ignoreGlob: rawConfig.ignore_glob ?? "**/*.d.ts",
-        projectId: rawConfig.project_id,
-        sourceRoot: rawConfig.source_root ?? sourceRoot,
-        sourceGlob: rawConfig.source_glob ?? "**/*.{ts,tsx}",
-        uploadLanguageId: rawConfig.upload_language_id || "default",
-        sourceKeyTransformer: rawConfig.source_key_transformer,
-        phraseKeyTransformer: rawConfig.phrase_key_transformer,
+        output,
+        branch: options.branch,
+        fileFormat: options.fileFormat ?? "react_simple_json",
+        ignoreGlob: options.ignoreGlob ?? "**/*.d.ts",
+        projectId: options.projectId,
+        sourceRoot: options.sourceRoot ?? sourceRoot,
+        sourceGlob: options.sourceGlob ?? "**/*.{ts,tsx}",
+        uploadLanguageId: options.uploadLanguageId || "default",
+        sourceKeyTransformer: options.sourceKeyTransformer,
+        phraseKeyTransformer: options.phraseKeyTransformer,
+        sourceKeyFilter: options.sourceKeyFilter,
+        phraseKeyFilter: options.phraseKeyFilter,
     } as NonSensitiveArgs
-
-    // override options from config file / cli with the ones from the project.json
-    // (output is hanlded separately because it has to be prefixed with the project root)
-    Object.assign(config, { ...config, ...options, output })
 
     if (!validateConfig(config, projectName, requiredConfigurationProperties)) {
         throw new Error("Invalid configuration")

@@ -26,6 +26,22 @@ nx run your-project-name:translation:pull
 
 Configuration happens in two steps. You'll need to adjust your project's configuration file and create a configuration file.
 
+### .phrase.yml
+
+The plugin uses a configuration file that has to be located in your nx project's root folder. The name of the file must be `.phrase.yml`. The content of this file should look something like this:
+
+```
+phrase:
+    projectNameA:
+        access_token: accessToken1
+    projectNameB:
+        access_token: accessToken2
+```
+
+The 'phrase' document root is required. Below the root node you can define multiple project configurations. The name of each configuration must be the name of the corresponding nx app or lib, for which the access token is valid. Don't have a Phrase access token yet? Goto [phrase.com -> Access Tokens](https://app.phrase.com/settings/oauth_access_tokens) and create one with read and write scopes. The access token is configured separately because Nx's `project.json` are committed to version control, therefor the secret does not belong there.
+
+**Make sure you never commit your `.phrase.yml` to your version control. Best to add it to your .gitignore file.**
+
 ### Adjusting your project.json
 
 To make the executor available via nx commands, add this to your `targets` section in your `project.json`:
@@ -33,16 +49,24 @@ To make the executor available via nx commands, add this to your `targets` secti
 ```json
 "translation": {
   "executor": "@porscheofficial/nx-phrase:build",
-    "options": {},
+    "options": {
+      "projectId": "some phrase project id",
+      "output": "src/assets/l10n",
+      "uploadLanguageId": "id of default language",
+      ...
+    },
     "configurations": {
       "pull": {
-        "operation": "pull"
+        "operation": "pull",
+        ...
       },
       "push": {
-        "operation": "push"
+        "operation": "push",
+        ...
       },
       "unused": {
-        "operation": "find-unused"
+        "operation": "find-unused",
+        ...
       }
     }
   }
@@ -51,56 +75,66 @@ To make the executor available via nx commands, add this to your `targets` secti
 
 Technically the `pull` configuration is unnecessary because pull the the default action of the executor, but it helps to keep things fluid.
 
-You may also specify all but the `access_token` options (see below) in the options of your target.
+All operations have the following options in common:
 
-### The configuration file
+| Name | What does it do? | Required | Default |
+| --- | --- | :-: | :-: |
+| projectId | Id of the phrase project to use. Can be found in Phrase project settings under API, or the "☁️ ID"-button on the project overview. | ✅ | - |
+| branch | In case you're working with branches in phrase. | ❌ | - |
 
-The plugin uses a central configuration file that has to be located in your nx project's root folder. The name of the file must be `.phrase.yml`. The file looks like this:
+Other options vary vary depending on the executed operation. It makes sense to set at least `projectId`, `output` and `uploadLanguageId` in the shared options of the executor configuration, to get you started quickly.
 
-```yaml
-phrase:
-    my-app-name:
-        access_token: phrase_access_token
-        project_id: phrase_project_id
-        output: src/assets/l10n
-        upload_language_id: phrase_language_id
-        file_format: react_simple_json       (optional)
-        branch: phrase_branch_name           (optional)
-        source_root: source_root_override    (optional)
-    my-other-app-name:
-        access_token: ...
-        ...
-```
+All available and required options per operation are explained in the next section.
 
-**Description:**
+#### Pull
 
-| What | project.json option | Why | Required | Default |
-| --- | --- | --- | :-: | :-: |
-| phrase | - | document root node | ✅ |  |
-| .my-app-name | - | nx project name, as specified under `pojects` in your `workspace.json` | ✅ |  |
-| ..access_token | - | Phrase access token. Don't have one yet? Goto [phrase.com -> Access Tokens](https://app.phrase.com/settings/oauth_access_tokens) and create one with read and write scopes. | ✅ | - |
-| ..project_id | projectId | Id of the phrase project to use. Can be found in Phrase project settings under API, or the "☁️ ID"-button on the project overview. | ✅ | - |
-| ..output | output | Where downloaded translations files will be placed relative to your project's root directory. | ✅ | - |
-| ..upload_language_id | uploadLanguageId | Language ID to use when uploading new translations. Can be found in the API section when editing a language. Do yourself a favor and make this a language you will never edit in phrase. | ✅ | - |
-| ..file_format | fileFormat | File format to download from phrase. See [supported platforms and formats](https://help.phrase.com/help/supported-platforms-and-formats) | ❌ | `react_simple_json` |
-| ..branch | branch | In case you're working with branches in phrase. | ❌ | - |
-| ..source_root | sourceRoot | Source root override, in case some of your sources are not located in your project's sourceRoot. | ❌ | Your project's sourceRoot directory (as specified in project.json) |
-| ..source_glob | sourceGlob | Glob pattern used to search for files containing translations | ❌ | `**/*.{ts,tsx}` |
-| ..source_key_transformer | sourceKeyTransformer | Path to a javascript file exporting a default function that is called for each key extracted from the source to allow transformation of said key | ❌ | - |
-| ..phrase_key_transformer | phraseKeyTransformer | Path to a javascript file exporting a default function that is called for each key downloaded from phrase to allow transformation of said key | ❌ | - |
+This operation pulls (i.e. downloads) translations from phrase into the configured output folder.
 
-All but the `access_token` property can also be specified in the options section of the nx-phrase target in your project.json. The `access_token` should never be committed to the repository, so it's not possible to specify it in the project.json
+| Name | What does it do? | Required | Default |
+| --- | --- | :-: | :-: |
+| output | Where downloaded translations files will be placed relative to your project's root directory. | ❌ | `./translations` |
+| fileFormat | File format to download from phrase. See [supported platforms and formats](https://help.phrase.com/help/supported-platforms-and-formats) | ❌ | `react_simple_json` |
+| branch | In case you're working with branches in phrase. | ❌ | - |
+
+#### Push
+
+This operation extracts translations from the source code and pushes (i.e. uploads) them to phrase.
+
+| Name | What does it do? | Required | Default |
+| --- | --- | :-: | :-: |
+| uploadLanguageId | Language ID to use when uploading translations. Can be found in the API section when editing a language. Do yourself a favor and make this a language you will never edit in phrase. | ✅ | - |
+| branch | In case you're working with branches in phrase. | ❌ | - |
+| sourceRoot | Source root override, in case some of your sources are not located in your project's sourceRoot. | ❌ | Your project's sourceRoot directory (as specified in project.json) |
+| sourceGlob | Glob pattern used to search for files containing translations | ❌ | `**/*.{ts,tsx}` |
+
+#### Unused
+
+This operation finds keys in the source code and phrase that are not in use or are missing. By configuring transfomers and filters it is also possible to compare keys that aren't a direct match. This is helpful for example when you allow your translators to create derivative translation keys that target the same translation in code.
+
+| Name | What does it do? | Required | Default |
+| --- | --- | :-: | :-: |
+| sourceKeyTransformer | Path to a javascript file exporting a default function that is called for each key extracted from the source to allow transformation of said key | ❌ | - |
+| phraseKeyTransformer | Path to a javascript file exporting a default function that is called for each key downloaded from phrase to allow transformation of said key | ❌ | - |
+| sourceKeyFilter | Path to a javascript file exporting a default function that is called for each key extracted from the source to allow transformation of said key | ❌ | - |
+| phraseKeyFilter | Path to a javascript file exporting a default function that is called for each key downloaded from phrase to allow transformation of said key | ❌ | - |
+
+#### (Future) Delete
+
+This operation allows you to delete keys in phrase. It is mostly used to delete translations keys that have previously been identified as unused by the `unused` operation.
+
+(This is still in development)
 
 ## Dependencies
 
 This plugin uses the following peer dependencies, which you will have to provide in your nx project.
 
-| Dependency    | Version | Needed for                                                  |
-| ------------- | ------- | ----------------------------------------------------------- |
-| js-yaml       | 4.x     | Reading configuration file aka `.phrase.yml`                |
-| form-data     | 4.x     | Used to construct multipart-form-data request for phase api |
-| @formatjs/cli | 4.x     | Used to extract and compile translations from codebase      |
-| fs-extra      | 10.x    | Convenience features for filesystem operation               |
+| Dependency        | Version | Needed for                                                                  |
+| ----------------- | ------- | --------------------------------------------------------------------------- |
+| js-yaml           | 4.x     | Reading configuration file aka `.phrase.yml`                                |
+| form-data         | 4.x     | Used to construct multipart-form-data request for phase api                 |
+| @formatjs/cli-lib | 5.x     | Used to extract and compile translations from codebase                      |
+| fs-extra          | 10.x    | Convenience features for filesystem operation                               |
+| glob              | 8.x     | Globbing library to find the source files to extract translations keys from |
 
 ## Running unit tests
 
