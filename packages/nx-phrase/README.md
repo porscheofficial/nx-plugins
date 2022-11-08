@@ -73,7 +73,7 @@ To make the executor available via nx commands, add this to your `targets` secti
 
 ```
 
-Technically the `pull` configuration is unnecessary because pull the the default action of the executor, but it helps to keep things fluid.
+Technically the `pull` configuration is unnecessary because `pull` is the the default action of the executor. It does help to keep your configuration easy to understand, though.
 
 All operations have the following options in common:
 
