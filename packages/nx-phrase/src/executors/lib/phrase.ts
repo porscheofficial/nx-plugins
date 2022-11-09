@@ -1,5 +1,8 @@
 import FormData from "form-data"
 import { RequestError, requestUrl } from "./request"
+import debug from "debug"
+
+const logger = debug("nx-plugins.nx-phrase.lib.phrase")
 
 const BASE_URL = process.env.PHRASE_API_BASE_URL ?? "https://api.phrase.com/v2"
 
@@ -53,7 +56,7 @@ export class PhraseClient {
     constructor(config: PhraseClientConfig) {
         this.credentials = { token: config.token }
 
-        console.log(`Using ${this.#baseUrl} as base`)
+        logger(`Using ${this.#baseUrl} as base`)
     }
 
     public async localesList({
@@ -111,7 +114,7 @@ export class PhraseClient {
         file_format: string
         branch?: string
     }): Promise<string> {
-        console.log("Downloading translation for", id)
+        logger("Downloading translation for", id)
 
         const url = new URL(`${this.#baseUrl}/projects/${projectId}/locales/${id}/download`)
         for (const argName in otherArgs) {
@@ -133,7 +136,7 @@ export class PhraseClient {
             if (e instanceof RequestError) {
                 // handle concurrency limit exceeded
                 if (e.statusCode === 429 && attempt < 5) {
-                    console.log(`Retrying due to concurrency`)
+                    logger(`Retrying due to concurrency`)
                     return true
                 }
             }

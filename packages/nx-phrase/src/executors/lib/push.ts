@@ -7,13 +7,16 @@ import { InternalPhraseConfig } from "./config"
 import { compile, extract } from "./formatjs"
 import { PhraseClient } from "./phrase"
 import { prepareOutput } from "../../utils"
+import debug from "debug"
+
+const logger = debug("nx-plugins.nx-phrase.lib.push")
 
 export async function extractTranslations(config: InternalPhraseConfig, outputPath: string) {
     // Extract translations from sources
-    console.log(`Extracting translations from files in '${config.sourceRoot}'`)
-    console.log(`using source glob '${config.sourceGlob}'`)
+    logger(`Extracting translations from files in '${config.sourceRoot}'`)
+    logger(`using source glob '${config.sourceGlob}'`)
     if (config.ignoreGlob) {
-        console.log(`Ignoring '${config.ignoreGlob}'`)
+        logger(`Ignoring '${config.ignoreGlob}'`)
     }
 
     const extractionOutputFile = `${outputPath}/translations.extracted.json`
@@ -24,12 +27,12 @@ export async function extractTranslations(config: InternalPhraseConfig, outputPa
         sourceGlob: config.sourceGlob,
         ignoreGlob: config.ignoreGlob,
     })
-    console.log(`Extracted translations into ${relative(process.cwd(), extractionOutputFile)}`)
+    logger(`Extracted translations into ${relative(process.cwd(), extractionOutputFile)}`)
 
     // Compile extracted translation into target format
     const compilationOutputFile = resolve(outputPath, "translations.compiled.json")
     await compile({ inputFile: extractionOutputFile, outputFile: compilationOutputFile })
-    console.log(`Compiled translations into ${relative(process.cwd(), compilationOutputFile)}`)
+    logger(`Compiled translations into ${relative(process.cwd(), compilationOutputFile)}`)
 
     return compilationOutputFile
 }
@@ -47,7 +50,7 @@ export async function uploadTranslations(config: InternalPhraseConfig, compilati
         },
         await readFile(compilationOutputFile)
     )
-    console.log(`Uploaded translations to phrase.`)
+    logger(`Uploaded translations to phrase.`)
 }
 
 export async function push(config: InternalPhraseConfig, context: ExecutorContext) {
@@ -58,7 +61,7 @@ export async function push(config: InternalPhraseConfig, context: ExecutorContex
     }
 
     const outputPath = prepareOutput({
-        projectRoot: context.root,
+        projectRoot: context.workspace.projects[context?.projectName]?.root ?? context.root,
         subfolder: "push",
         workingDirectory: config.workingDirectory,
     })

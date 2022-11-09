@@ -136,6 +136,7 @@ This plugin uses the following peer dependencies, which you will have to provide
 | @formatjs/cli-lib | 5.x     | Used to extract and compile translations from codebase                      |
 | fs-extra          | 10.x    | Convenience features for filesystem operation                               |
 | glob              | 8.x     | Globbing library to find the source files to extract translations keys from |
+| debug             | 4.x     | Logging library                                                             |
 
 ## Running unit tests
 

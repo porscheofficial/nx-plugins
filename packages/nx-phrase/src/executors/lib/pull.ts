@@ -5,40 +5,44 @@ import { PhraseClient, PhraseLocale } from "./phrase"
 
 type TranslationsMap = Record<string, string>
 
-export async function listLocales(config: InternalPhraseConfig): Promise<PhraseLocale[]> {
-    const phrase = new PhraseClient(config.phraseClientConfig)
-    return await phrase.localesListAll({ projectId: config.projectId })
-}
+export class PullHelper {
+    private phrase: PhraseClient
 
-export async function downloadTranslations(
-    config: InternalPhraseConfig,
-    locales: PhraseLocale[]
-): Promise<TranslationsMap> {
-    const phrase = new PhraseClient(config.phraseClientConfig)
-
-    const translations: Record<string, string> = {}
-    for (const locale of locales) {
-        const { id, name } = locale
-        if (id && name) {
-            const localeData = await phrase.localesDownload({
-                projectId: config.projectId,
-                id,
-                branch: config.branch,
-                file_format: config.fileFormat,
-                // Use phrase API fallback locale?
-                ...(config.useFallbackLocale
-                    ? {
-                          fallback_locale_id: locale.fallback_locale.id,
-                          include_empty_translations: true,
-                      }
-                    : {}),
-            })
-
-            translations[name] = localeData
-        }
+    constructor(private config: InternalPhraseConfig) {
+        this.phrase = new PhraseClient(this.config.phraseClientConfig)
     }
 
-    return translations
+    async listLocales(): Promise<PhraseLocale[]> {
+        return await this.phrase.localesListAll({ projectId: this.config.projectId, branch: this.config.branch })
+    }
+
+    async downloadTranslations(locales: PhraseLocale[]): Promise<TranslationsMap> {
+        const phrase = new PhraseClient(this.config.phraseClientConfig)
+
+        const translations: Record<string, string> = {}
+        for (const locale of locales) {
+            const { id, name } = locale
+            if (id && name) {
+                const localeData = await phrase.localesDownload({
+                    projectId: this.config.projectId,
+                    id,
+                    branch: this.config.branch,
+                    file_format: this.config.fileFormat,
+                    // Use phrase API fallback locale?
+                    ...(this.config.useFallbackLocale
+                        ? {
+                              fallback_locale_id: locale.fallback_locale.id,
+                              include_empty_translations: true,
+                          }
+                        : {}),
+                })
+
+                translations[name] = localeData
+            }
+        }
+
+        return translations
+    }
 }
 
 export async function writeTranslations(translations: TranslationsMap, config: InternalPhraseConfig) {
@@ -57,8 +61,10 @@ export async function writeTranslations(translations: TranslationsMap, config: I
 export async function pull(config: InternalPhraseConfig) {
     console.log(`Translations will be written to ${config.output}.`)
 
-    const locales = await listLocales(config)
-    const translations = await downloadTranslations(config, locales)
+    const pull = new PullHelper(config)
+
+    const locales = await pull.listLocales()
+    const translations = await pull.downloadTranslations(locales)
 
     // fake fallback_locale functionality via source_locale
     if (config.useSourceLocaleAsFallback) {
