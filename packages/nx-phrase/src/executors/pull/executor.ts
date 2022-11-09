@@ -11,5 +11,7 @@ export default async function runExecutor(options: Partial<NonSensitiveArgs>, co
 
     await pull(config)
 
+    console.log("Done.")
+
     return { success: true }
 }

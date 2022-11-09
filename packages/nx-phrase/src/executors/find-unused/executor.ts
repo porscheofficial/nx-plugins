@@ -4,7 +4,7 @@ import { resolve } from "path"
 import { prepareOutput } from "../../utils"
 
 import { getConfig, InternalPhraseConfig } from "../lib/config"
-import { downloadTranslations, listLocales } from "../lib/pull"
+import { PullHelper } from "../lib/pull"
 import { extractTranslations } from "../lib/push"
 import { NonSensitiveArgs } from "../lib/types"
 
@@ -44,9 +44,11 @@ async function getKeysFromSource(config: InternalPhraseConfig, outputFilePath: s
 }
 
 async function getKeysFromPhrase(config: InternalPhraseConfig) {
+    const pull = new PullHelper({ ...config, fileFormat: "react_simple_json" })
+
     // downloads available translations
-    const locales = await listLocales(config)
-    const localeToRawTranslations = await downloadTranslations({ ...config, fileFormat: "react_simple_json" }, locales)
+    const locales = await pull.listLocales()
+    const localeToRawTranslations = await pull.downloadTranslations(locales)
     const keysInPhrase = new Set<string>()
     Object.keys(localeToRawTranslations).forEach((locale) =>
         Object.keys(JSON.parse(localeToRawTranslations[locale])).forEach((key) => keysInPhrase.add(key))
@@ -75,7 +77,7 @@ export default async function runExecutor(options: Partial<NonSensitiveArgs>, co
 
     // extract and prepare keys from source code
     const outputPath = await prepareOutput({
-        projectRoot: context.root,
+        projectRoot: context.workspace.projects[context?.projectName]?.root ?? context.root,
         subfolder: "unused",
         workingDirectory: options.workingDirectory,
     })
@@ -98,7 +100,7 @@ export default async function runExecutor(options: Partial<NonSensitiveArgs>, co
             writeFileSync(sourceBugKeysFilename, JSON.stringify(bogusKeys, null, 2), {
                 flag: "w",
             })
-            console.log(`Malformed keys from source written to: ${sourceBugKeysFilename}`)
+            console.log(`Keys filtered from source written to: ${sourceBugKeysFilename}`)
         }
 
         sourceTranslationKeys = applyTransform(sourceTranslationKeys, sourceKeyTransformer)
@@ -124,7 +126,7 @@ export default async function runExecutor(options: Partial<NonSensitiveArgs>, co
             writeFileSync(phraseBugKeysFilename, JSON.stringify(bogusKeys, null, 2), {
                 flag: "w",
             })
-            console.log(`Malformed keys from phrase written to: ${phraseBugKeysFilename}`)
+            console.log(`Keys filtered from phrase written to: ${phraseBugKeysFilename}`)
         }
 
         phraseTranslationKeys = applyTransform(phraseTranslationKeys, phraseKeyTransformer)
@@ -147,7 +149,9 @@ export default async function runExecutor(options: Partial<NonSensitiveArgs>, co
     })
     console.log(`Keys pending upload written to: ${pendingUploadKeysFilename}`)
 
-    console.log(`${context.targetName} ${context.configurationName}`)
+    // console.log(`${context.targetName} ${context.configurationName}`)
+
+    console.log("Done.")
 
     return { success: true }
 }
