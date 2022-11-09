@@ -1,3 +1,9 @@
+# -----------------------------------------------------------------
+# This file contains credentials used by @porscheofficial/nx-phrase
+#
+#                    DO NOT COMMIT THIS FILE
+# -----------------------------------------------------------------
+
 phrase:
     <%= projectName %>:
         access_token: access_token

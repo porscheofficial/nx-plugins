@@ -16,6 +16,8 @@ const options: Partial<NonSensitiveArgs> = {
 const TEST_ASSETS_DIR = resolve(__dirname, "../../../test")
 
 function nockForProject(projectId = "project_id") {
+    const french = { greeting: "bonjour" }
+
     nock("https://api.phrase.com/v2")
         .get(`/projects/${projectId}/locales`)
         .matchHeader("Authorization", /token .*/)
@@ -27,6 +29,11 @@ function nockForProject(projectId = "project_id") {
         .query({ file_format: "react_simple_json" })
         .thrice()
         .reply(429, { message: "Concurrency limit exceeded" })
+
+        .get(/\/projects\/[^/]+\/locales\/french\/download/)
+        .matchHeader("Authorization", /token .*/)
+        .query({ file_format: "react_simple_json" })
+        .reply(200, french)
 
         .get(/\/projects\/[^/]+\/locales\/[^/]+\/download/)
         .matchHeader("Authorization", /token .*/)
@@ -54,7 +61,29 @@ describe("Pull", () => {
         const output = await executor(options, context)
         expect(output.success).toBe(true)
 
-        expect(readFileSync(resolve(TEST_ASSETS_DIR, ".nx-phrase/translations", "fr-BE.json"))).toMatchSnapshot()
-        expect(readFileSync(resolve(TEST_ASSETS_DIR, ".nx-phrase/translations", "fr-CA.json"))).toMatchSnapshot()
+        expect(
+            readFileSync(resolve(TEST_ASSETS_DIR, ".nx-phrase/translations", "fr-BE.json")).toString()
+        ).toMatchSnapshot()
+        expect(
+            readFileSync(resolve(TEST_ASSETS_DIR, ".nx-phrase/translations", "fr-CA.json")).toString()
+        ).toMatchSnapshot()
+    })
+
+    it("works with fallback_locale workaround", async () => {
+        nockForProject(options.projectId)
+        const output = await executor({ ...options, useSourceLocaleAsFallback: true }, context)
+        expect(output.success).toBe(true)
+
+        // canada has a source_locale set, so it should contain all keys from the source language as well
+        const canadianFrench = JSON.parse(
+            readFileSync(resolve(TEST_ASSETS_DIR, ".nx-phrase/translations", "fr-CA.json")).toString()
+        )
+        expect(canadianFrench).toHaveProperty("greeting")
+
+        // belgion does not have source_locale set, so it should NOT contain the key defined in french
+        const belgianFrench = JSON.parse(
+            readFileSync(resolve(TEST_ASSETS_DIR, ".nx-phrase/translations", "fr-BE.json")).toString()
+        )
+        expect(belgianFrench).not.toHaveProperty("greeting")
     })
 })

@@ -5,7 +5,7 @@ const BASE_URL = process.env.PHRASE_API_BASE_URL ?? "https://api.phrase.com/v2"
 
 export type Translations = Record<string, string>
 
-interface PhraseLocale {
+export interface PhraseLocale {
     id: string
     name: string
     code: string
@@ -20,9 +20,14 @@ interface PhraseLocale {
         name: string
         code: string
     }
+    fallback_locale: {
+        id: string
+        name: string
+        code: string
+    }
 }
 
-interface PhraseKey {
+export interface PhraseKey {
     id: string
     name: string
     description: string

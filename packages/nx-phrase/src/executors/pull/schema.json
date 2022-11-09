@@ -26,6 +26,14 @@
         "workingDirectory": {
             "description": "",
             "type": "string"
+        },
+        "useSourceLocaleAsFallback": {
+            "description": "Emulate phrase fallback_locale behaviour via source_locale field",
+            "type": "boolean"
+        },
+        "useFallbackLocale": {
+            "description": "not not use",
+            "type": "boolean"
         }
     },
     "required": ["projectId", "output"]
