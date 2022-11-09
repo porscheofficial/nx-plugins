@@ -244,10 +244,6 @@ export class PhraseClient {
         return foundKeys.map((key) => key.id)
     }
 
-    /**
-     * curl -X DELETE "https://api.phrase.com/v2/projects/231c5aeb7c0bd038e0a097f2dc5e80a8/keys/937f71237d1b81cfd51b251be98a8e45" \
- -H "Authorization:  token ec0208fcf3825ca46911ea6c5e576229f3d2a469cc572e351ac33cd238ce29c2" 
-     */
     public async deleteKey({ projectId, keyId, ...otherArgs }: { projectId: string; keyId: string; branch?: string }) {
         const url = new URL(`${this.#baseUrl}/projects/${projectId}/keys/${keyId}`)
         for (const argName in otherArgs) {

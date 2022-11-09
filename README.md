@@ -4,10 +4,10 @@ This repository provides reusable patterns for use in nx monorepos. It is an exc
 
 ## List of plugins currently in this repository
 
-| Name | Description |
-| --- | --- |
-| [nx-phrase](packages/nx-phrase/) | Helps with common translations tasks using formatjs / react-intl and phrase as provider |
-| [nx-oagen](packages/nx-oagen/) | Helps with creation of nx libraries with api clients generated from openapi specification using openapi-generate |
+| Name |  | Description |
+| --- | --- | --- |
+| [nx-phrase](packages/nx-phrase/) | [![npm (scoped)](https://img.shields.io/npm/v/@porscheofficial/nx-phrase?style=flat-square)](https://www.npmjs.com/package/@porscheofficial/nx-phrase) | Helps with common translations tasks using formatjs / react-intl and phrase as provider |
+| [nx-oagen](packages/nx-oagen/) |  | Helps with creation of nx libraries with api clients generated from openapi specification using openapi-generate |
 
 # How does this repository work?
 
