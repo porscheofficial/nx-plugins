@@ -28,11 +28,11 @@
             "type": "string"
         },
         "useSourceLocaleAsFallback": {
-            "description": "Emulate phrase fallback_locale behaviour via source_locale field",
+            "description": "Emulate phrase fallback_locale behaviour via source_locale field. Only works with fileFormat react_simple_json",
             "type": "boolean"
         },
         "useFallbackLocale": {
-            "description": "not not use",
+            "description": "Pass fallback_locale during locale download to api. All translations that don't exist in the locale currently being downloaded will be complemented with the ones from the fallback_locale",
             "type": "boolean"
         }
     },

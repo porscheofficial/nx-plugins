@@ -13,7 +13,7 @@
             "default": "pull"
         },
         "projectId": {
-            "description": "",
+            "description": "Phrase project id. Can be found in Phrase project settings under API, or the '☁️ ID'-button on the project overview.",
             "type": "string"
         },
         "branch": {
@@ -21,27 +21,27 @@
             "type": "string"
         },
         "fileFormat": {
-            "description": "",
+            "description": "(optional) File format to download from phrase. See https://help.phrase.com/help/supported-platforms-and-formats",
             "type": "string"
         },
         "output": {
-            "description": "",
+            "description": "(optional) Path relative to your project's root directory where downloaded translations files will be placed",
             "type": "string"
         },
         "uploadLanguageId": {
-            "description": "",
+            "description": "Language ID to use when uploading translations. Can be found in the API section when editing a language",
             "type": "string"
         },
         "sourceRoot": {
-            "description": "",
+            "description": "(optional) Source root override, in case some of your sources are not located in your project's sourceRoot",
             "type": "string"
         },
         "sourceGlob": {
-            "description": "",
+            "description": "(optional) Glob pattern used to search for files containing translations",
             "type": "string"
         },
         "ignoreGlob": {
-            "description": "",
+            "description": "(optional) Glob pattern to ignore some files that would otherwise be included by sourceGlob",
             "type": "string"
         },
         "sourceKeyTransformer": {
@@ -61,11 +61,11 @@
             "type": "string"
         },
         "useSourceLocaleAsFallback": {
-            "description": "Emulate phrase fallback_locale behaviour via source_locale field",
+            "description": "(optional) Emulate phrase fallback_locale behaviour via source_locale field. Only works with fileFormat react_simple_json",
             "type": "boolean"
         },
         "useFallbackLocale": {
-            "description": "not not use",
+            "description": "(optional) Pass fallback_locale during locale download to api. All translations that don't exist in the locale currently being downloaded will be complemented with the ones from the fallback_locale",
             "type": "boolean"
         }
     },

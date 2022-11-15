@@ -107,6 +107,7 @@ This operation extracts translations from the source code and pushes (i.e. uploa
 | branch | In case you're working with branches in phrase. | ❌ | - |
 | sourceRoot | Source root override, in case some of your sources are not located in your project's sourceRoot. | ❌ | Your project's sourceRoot directory (as specified in project.json) |
 | sourceGlob | Glob pattern used to search for files containing translations | ❌ | `**/*.{ts,tsx}` |
+| ignoreGlob | Glob pattern to ignore some files that would otherwise be included by `sourceGlob` | ❌ |  |
 
 #### Unused
 
