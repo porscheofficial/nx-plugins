@@ -4,7 +4,7 @@ import { ExecutorContext } from "@nrwl/devkit"
 import nock from "nock"
 
 import executor from "./executor"
-import { NonSensitiveArgs } from "../lib/types"
+import { NonSensitiveArgs } from "../../lib/types"
 
 const TEST_ASSETS_DIR = resolve(__dirname, "../../../test")
 
