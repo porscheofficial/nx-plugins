@@ -12,5 +12,6 @@
         }
     },
     "tags": [],
-    "implicitDependencies": ["nx-oagen"]
+    "implicitDependencies": ["nx-oagen"],
+    "name": "nx-oagen-e2e"
 }
