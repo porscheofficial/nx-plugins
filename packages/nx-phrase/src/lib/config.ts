@@ -5,7 +5,7 @@ import { NonSensitiveArgs } from "./types"
 import { ExecutorContext } from "@nrwl/devkit"
 import { load } from "js-yaml"
 import { PhraseClientConfig } from "./phrase"
-import { BuildExecutorSchema } from "../build/schema"
+import { BuildExecutorSchema } from "../executors/build/schema"
 
 interface ConfigFileFormat {
     phrase: {

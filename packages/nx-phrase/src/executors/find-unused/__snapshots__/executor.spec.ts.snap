@@ -34,6 +34,12 @@ Array [
 ]
 `;
 
+exports[`find unused filters keys: keys that exist in phrase more than once 1`] = `
+Array [
+  "a.b.c.d",
+]
+`;
+
 exports[`find unused transforms keys: keys downloaded from phrase that are NOT used in the source (anymore) 1`] = `
 Array [
   "a.c.d.e",

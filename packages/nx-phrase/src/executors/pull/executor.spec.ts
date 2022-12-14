@@ -4,8 +4,8 @@ import { ExecutorContext } from "@nrwl/devkit"
 import nock from "nock"
 
 import executor from "./executor"
-import { NonSensitiveArgs } from "../lib/types"
-import { PhraseClient } from "../lib/phrase"
+import { NonSensitiveArgs } from "../../lib/types"
+import { PhraseClient } from "../../lib/phrase"
 import { readFileSync } from "fs"
 
 const options: Partial<NonSensitiveArgs> = {
@@ -21,7 +21,7 @@ function nockForProject(projectId = "project_id") {
     nock("https://api.phrase.com/v2")
         .get(`/projects/${projectId}/locales`)
         .matchHeader("Authorization", /token .*/)
-        .query({ per_page: 20 })
+        .query({ per_page: 20, page: 1 })
         .replyWithFile(200, `${TEST_ASSETS_DIR}/localesListResponse.json`)
 
         .get(/\/projects\/[^/]+\/locales\/[^/]+\/download/)

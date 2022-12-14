@@ -8,7 +8,7 @@ import {
     readJson,
 } from "@nrwl/devkit"
 import { join } from "path"
-import { normalizeOptions, NPM_SCOPE } from "../../utils"
+import { normalizeOptions, NPM_SCOPE } from "../../lib/utils"
 import { NxPhraseGeneratorSchema } from "./schema"
 
 export default async function (tree: Tree, options: NxPhraseGeneratorSchema) {

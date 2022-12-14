@@ -12,7 +12,7 @@ export async function deleteKeys(file: string, config: InternalPhraseConfig): Pr
     const phrase = new PhraseClient(config.phraseClientConfig)
     for (const key of keysToDelete) {
         // resolve keyIds for key name
-        const keyIds = await phrase.resolveKeyIdByName({
+        const keyIds = await phrase.keysSearchByName({
             projectId: config.projectId,
             keyName: key,
             branch: config.branch,

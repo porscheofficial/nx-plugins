@@ -1,4 +1,4 @@
-import { NonSensitiveArgs } from "../lib/types"
+import { NonSensitiveArgs } from "../../lib/types"
 
 export type Operation = "push" | "pull" | "find-unused"
 
