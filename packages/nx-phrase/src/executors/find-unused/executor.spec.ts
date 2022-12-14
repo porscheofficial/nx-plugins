@@ -4,8 +4,8 @@ import { ExecutorContext } from "@nrwl/devkit"
 import nock from "nock"
 
 import executor from "./executor"
-import { NonSensitiveArgs } from "../lib/types"
-import { NPM_SCOPE } from "../../utils"
+import { NonSensitiveArgs } from "../../lib/types"
+import { NPM_SCOPE } from "../../lib/utils"
 import { readFileSync } from "fs"
 
 const options: Partial<NonSensitiveArgs> = {
@@ -16,15 +16,11 @@ const TEST_ASSETS_DIR = resolve(__dirname, "../../../test")
 
 function nockForProject(projectId = "project_id") {
     nock("https://api.phrase.com/v2")
-        .get(`/projects/${projectId}/locales`)
+        .get(`/projects/${projectId}/keys`)
         .matchHeader("Authorization", /token .*/)
-        .query({ per_page: 20 })
-        .replyWithFile(200, `${TEST_ASSETS_DIR}/localesListResponse.json`)
-        .get(/\/projects\/[^/]+\/locales\/[^/]+\/download/)
-        .matchHeader("Authorization", /token .*/)
-        .query({ file_format: "react_simple_json" })
-        .thrice()
-        .replyWithFile(200, `${TEST_ASSETS_DIR}/localeDownloadResponse.json`)
+        .query({ page: "1", per_page: "20" })
+        .once()
+        .replyWithFile(200, `${TEST_ASSETS_DIR}/keyListResponse.json`)
 }
 
 describe("find unused", () => {
@@ -100,6 +96,14 @@ describe("find unused", () => {
                 ).toString()
             )
         ).toMatchSnapshot("keys from phrase that are NOT valid according to the filter function")
+
+        expect(
+            JSON.parse(
+                readFileSync(
+                    resolve(TEST_ASSETS_DIR, ".nx-phrase/unused/test_app.phrase-duplicate-keys.json")
+                ).toString()
+            )
+        ).toMatchSnapshot("keys that exist in phrase more than once")
     })
 
     it("filters before applying transformers", async () => {

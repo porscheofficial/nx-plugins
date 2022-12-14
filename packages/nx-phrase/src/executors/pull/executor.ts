@@ -1,8 +1,8 @@
 import { ExecutorContext } from "@nrwl/devkit"
 
-import { getConfig, InternalPhraseConfig } from "../lib/config"
-import { pull } from "../lib/pull"
-import { NonSensitiveArgs } from "../lib/types"
+import { getConfig, InternalPhraseConfig } from "../../lib/config"
+import { pull } from "../../lib/pull"
+import { NonSensitiveArgs } from "../../lib/types"
 
 export const pullRequiredConfigs = ["projectId", "output"]
 

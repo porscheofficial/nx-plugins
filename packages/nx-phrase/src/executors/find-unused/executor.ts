@@ -1,12 +1,12 @@
 import { ExecutorContext } from "@nrwl/devkit"
 import { existsSync, writeFileSync } from "fs"
 import { resolve } from "path"
-import { prepareOutput } from "../../utils"
+import { prepareOutput } from "../../lib/utils"
 
-import { getConfig, InternalPhraseConfig } from "../lib/config"
-import { PullHelper } from "../lib/pull"
-import { extractTranslations } from "../lib/push"
-import { NonSensitiveArgs } from "../lib/types"
+import { getConfig, InternalPhraseConfig } from "../../lib/config"
+import { extractTranslations } from "../../lib/push"
+import { NonSensitiveArgs } from "../../lib/types"
+import { PhraseClient } from "../../lib/phrase"
 
 const requiredConfigProperties = ["projectId", "output"]
 
@@ -43,21 +43,30 @@ async function getKeysFromSource(config: InternalPhraseConfig, outputFilePath: s
     return compiledTranslationKeys
 }
 
-async function getKeysFromPhrase(config: InternalPhraseConfig) {
-    const pull = new PullHelper({ ...config, fileFormat: "react_simple_json" })
-
-    // downloads available translations
-    const locales = await pull.listLocales()
-    const localeToRawTranslations = await pull.downloadTranslations(locales)
-    const keysInPhrase = new Set<string>()
-    Object.keys(localeToRawTranslations).forEach((locale) =>
-        Object.keys(JSON.parse(localeToRawTranslations[locale])).forEach((key) => keysInPhrase.add(key))
-    )
-
-    // use set for deduplication
-    const keysInPhraseList = [...keysInPhrase]
+async function getKeysFromPhrase(config: InternalPhraseConfig): Promise<string[]> {
+    const phrase = new PhraseClient(config.phraseClientConfig)
+    const keysInPhrase = await phrase.keysListAll({ projectId: config.projectId, branch: config.branch })
+    const keysInPhraseList = keysInPhrase.map(({ name }) => name)
 
     return keysInPhraseList
+
+    // TODO deduplication of keys, report duplicates?
+
+    // Old (slow) logic:
+    // const pull = new PullHelper({ ...config, fileFormat: "react_simple_json" })
+
+    // // downloads available translations
+    // const locales = await pull.listLocales()
+    // const localeToRawTranslations = await pull.downloadTranslations(locales)
+    // const keysInPhrase = new Set<string>()
+    // Object.keys(localeToRawTranslations).forEach((locale) =>
+    //     Object.keys(JSON.parse(localeToRawTranslations[locale])).forEach((key) => keysInPhrase.add(key))
+    // )
+
+    // // use set for deduplication
+    // const keysInPhraseList = [...keysInPhrase]
+
+    // return keysInPhraseList
 }
 
 function applyTransform(input: string[], transformer: transformTranslationKeyFn) {
@@ -108,6 +117,7 @@ export default async function runExecutor(options: Partial<NonSensitiveArgs>, co
 
     // extract and prepare keys from phrase
     let phraseTranslationKeys
+    const phraseDuplicatedKeys = []
     {
         const phraseKeyFilter = options.phraseKeyFilter
             ? await loadTransformer<filterKeyFn>(resolve(context.root, options.phraseKeyFilter))
@@ -118,10 +128,31 @@ export default async function runExecutor(options: Partial<NonSensitiveArgs>, co
             : defaultTransformKeyFn
 
         const allPhraseTranslationKeys = await getKeysFromPhrase(config)
-        phraseTranslationKeys = filterList(allPhraseTranslationKeys, phraseKeyFilter)
 
-        if (allPhraseTranslationKeys.length !== phraseTranslationKeys.length) {
-            const bogusKeys = allPhraseTranslationKeys.filter((key) => !phraseTranslationKeys.includes(key))
+        // check for duplicate keys (keys are not unique in phrase, so this can happen when a key is renamed)
+        const deduplicatedPhraseTranslationKeys = allPhraseTranslationKeys.filter((key, index) => {
+            if (allPhraseTranslationKeys.indexOf(key) !== index) {
+                phraseDuplicatedKeys.push(key)
+                return false
+            } else {
+                return true
+            }
+        })
+        console.log(deduplicatedPhraseTranslationKeys)
+
+        // report duplicated keys
+        if (phraseDuplicatedKeys.length > 0) {
+            const phraseDuplicateKeysFilename = `${outputPath}/${projectName}.phrase-duplicate-keys.json`
+            writeFileSync(phraseDuplicateKeysFilename, JSON.stringify(phraseDuplicatedKeys, null, 2), {
+                flag: "w",
+            })
+            console.log(`Duplicated keys im phrase written to: ${phraseDuplicateKeysFilename}`)
+        }
+
+        phraseTranslationKeys = filterList(deduplicatedPhraseTranslationKeys, phraseKeyFilter)
+
+        if (deduplicatedPhraseTranslationKeys.length !== phraseTranslationKeys.length) {
+            const bogusKeys = deduplicatedPhraseTranslationKeys.filter((key) => !phraseTranslationKeys.includes(key))
             const phraseBugKeysFilename = `${outputPath}/${projectName}.filtered-phrase-keys.json`
             writeFileSync(phraseBugKeysFilename, JSON.stringify(bogusKeys, null, 2), {
                 flag: "w",

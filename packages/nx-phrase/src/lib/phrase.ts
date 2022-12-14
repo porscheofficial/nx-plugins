@@ -89,7 +89,7 @@ export class PhraseClient {
     }
 
     public async localesListAll(args: PhraseAllPaginated<Parameters<PhraseClient["localesList"]>[0]>) {
-        let page = 0
+        let page = 1
         let items = [] as PhraseLocale[]
         let nextPage = [] as PhraseLocale[]
 
@@ -132,48 +132,57 @@ export class PhraseClient {
                 errorMessagePrefix: `Failed to download translations for ${id}`,
             })
 
-        return this.retry(downloadRequestFactory, (e: unknown, attempt: number) => {
-            if (e instanceof RequestError) {
-                // handle concurrency limit exceeded
-                if (e.statusCode === 429 && attempt < 5) {
-                    logger(`Retrying due to concurrency`)
-                    return true
-                }
-            }
-
-            return false
-        })
+        return this.retry(downloadRequestFactory, PhraseClient.concurrencyHandler)
     }
 
-    private async retry<T extends () => R | Promise<R>, R>(
-        callbackFn: T,
-        shouldRetry: (error: unknown, attempt: number) => boolean | Promise<boolean>
-    ): Promise<R> {
-        let attempt = 0
-        let repeat = false
+    public async keysList({
+        projectId,
+        ...optionalArgs
+    }: {
+        projectId: string
+        // These arguments are snake cased because that is how the api expects them
+        page?: number
+        per_page?: number
+        sort_by?: string
+        branch?: string
+    }) {
+        const url = new URL(`${this.#baseUrl}/projects/${projectId}/keys`)
+        for (const argName in optionalArgs) {
+            if (optionalArgs[argName]) {
+                url.searchParams.set(argName, optionalArgs[argName])
+            }
+        }
+
+        const getRequestFactory = () =>
+            requestUrl(url, {
+                headers: {
+                    Authorization: `token ${this.credentials.token}`,
+                },
+                successStatus: 200,
+                errorMessagePrefix: "Failed to load keys",
+            })
+
+        const response = await this.retry<() => Promise<string>, string>(
+            getRequestFactory,
+            PhraseClient.concurrencyHandler
+        )
+
+        return JSON.parse(response) as Promise<PhraseKey[]>
+    }
+
+    public async keysListAll(args: PhraseAllPaginated<Parameters<PhraseClient["keysList"]>[0]>) {
+        let page = 1
+        let items = [] as PhraseKey[]
+        let nextPage = [] as PhraseKey[]
+
         do {
-            try {
-                attempt++
-                return await callbackFn()
-            } catch (e) {
-                repeat = await shouldRetry(e, attempt)
-                if (!repeat) {
-                    throw e
-                }
+            nextPage = await this.keysList({ ...args, page, per_page: this.ITEMS_PER_PAGE })
+            items = [...items, ...nextPage]
 
-                const sleepFor = 2 ** attempt * 1000
-                await this.sleepHelper(sleepFor)
-            }
-        } while (repeat)
+            page++
+        } while (nextPage.length >= this.ITEMS_PER_PAGE)
 
-        throw new Error("Unreachable")
-    }
-
-    /**
-     * Sleep helper can be overwritten with jest.mock to allow proper testing  of retry
-     */
-    async sleepHelper(time: number) {
-        await new Promise((resolve) => setTimeout(resolve, time))
+        return items
     }
 
     public async upload(
@@ -215,7 +224,7 @@ export class PhraseClient {
         })
     }
 
-    public async resolveKeyIdByName({
+    public async keysSearchByName({
         projectId,
         keyName,
         ...otherArgs
@@ -263,5 +272,48 @@ export class PhraseClient {
             successStatus: 204,
             errorMessagePrefix: "Failed to delete key",
         })
+    }
+
+    private async retry<T extends () => R | Promise<R>, R>(
+        callbackFn: T,
+        shouldRetry: (error: unknown, attempt: number) => boolean | Promise<boolean>
+    ): Promise<R> {
+        let attempt = 0
+        let repeat = false
+        do {
+            try {
+                attempt++
+                return await callbackFn()
+            } catch (e) {
+                repeat = await shouldRetry(e, attempt)
+                if (!repeat) {
+                    throw e
+                }
+
+                const sleepFor = 2 ** attempt * 1000
+                await this.sleepHelper(sleepFor)
+            }
+        } while (repeat)
+
+        throw new Error("Unreachable")
+    }
+
+    private static concurrencyHandler(e: unknown, attempt: number) {
+        if (e instanceof RequestError) {
+            // handle concurrency limit exceeded
+            if (e.statusCode === 429 && attempt < 5) {
+                logger(`Retrying due to concurrency`)
+                return true
+            }
+        }
+
+        return false
+    }
+
+    /**
+     * Sleep helper can be overwritten with jest.mock to allow proper testing  of retry
+     */
+    async sleepHelper(time: number) {
+        await new Promise((resolve) => setTimeout(resolve, time))
     }
 }

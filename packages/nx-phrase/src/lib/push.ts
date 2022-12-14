@@ -6,7 +6,7 @@ import { readFile } from "fs-extra"
 import { InternalPhraseConfig } from "./config"
 import { compile, extract } from "./formatjs"
 import { PhraseClient } from "./phrase"
-import { prepareOutput } from "../../utils"
+import { prepareOutput } from "./utils"
 import debug from "debug"
 
 const logger = debug("nx-plugins.nx-phrase.lib.push")

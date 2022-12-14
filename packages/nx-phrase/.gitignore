@@ -1,2 +1,4 @@
 /.phraseapp.yml
 src/executors/build/api
+**/.env.*
+**/.env

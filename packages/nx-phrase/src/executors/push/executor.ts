@@ -1,8 +1,8 @@
 import { ExecutorContext } from "@nrwl/devkit"
 
-import { getConfig, InternalPhraseConfig } from "../lib/config"
-import { push } from "../lib/push"
-import { NonSensitiveArgs } from "../lib/types"
+import { getConfig, InternalPhraseConfig } from "../../lib/config"
+import { push } from "../../lib/push"
+import { NonSensitiveArgs } from "../../lib/types"
 
 export const pushRequiredConfigs = ["projectId", "uploadLanguageId"]
 
