@@ -24,7 +24,12 @@ describe("Build Executor", () => {
         context = {
             root: tmpDir,
             workspace: {
-                projects: { [projectName]: { sourceRoot: `${tmpDir}/libs/${projectName}/src` } },
+                projects: {
+                    [projectName]: {
+                        sourceRoot: `${tmpDir}/libs/${projectName}/src`,
+                        root: `${tmpDir}/libs/${projectName}`,
+                    },
+                },
             } as unknown as ExecutorContext["workspace"],
             cwd: tmpDir,
             isVerbose: false,
@@ -41,6 +46,7 @@ describe("Build Executor", () => {
         const output = await executor(options, context)
 
         expect(output.success).toBe(true)
+
         expect(existsSync(`${context.workspace.projects[projectName].sourceRoot}/index.ts`)).toBe(true)
         expect(existsSync(`${context.workspace.projects[projectName].sourceRoot}/lib`)).toBe(true)
         expect(existsSync(`${context.workspace.projects[projectName].sourceRoot}/lib/index.ts`)).toBe(true)

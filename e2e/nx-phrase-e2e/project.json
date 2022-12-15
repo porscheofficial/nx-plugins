@@ -12,5 +12,6 @@
         }
     },
     "tags": [],
-    "implicitDependencies": ["nx-phrase"]
+    "implicitDependencies": ["nx-phrase"],
+    "name": "nx-phrase-e2e"
 }
