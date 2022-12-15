@@ -6,7 +6,7 @@ import { NormalizedSchema, normalizeOptions, NPM_SCOPE } from "../../utils"
 import { join, relative } from "path"
 import { mkdtempSync, rmSync } from "fs-extra"
 
-function addFiles(tree: Tree, options: NormalizedSchema) {
+function addFiles(tree: Tree, options: NormalizedSchema, targetDir: string) {
     const templateOptions = {
         ...options,
         ...names(options.projectName),
@@ -14,7 +14,7 @@ function addFiles(tree: Tree, options: NormalizedSchema) {
         template: "",
     }
 
-    generateFiles(tree, join(__dirname, "files"), options.projectRoot, templateOptions)
+    generateFiles(tree, join(__dirname, "files"), targetDir, templateOptions)
 }
 
 export default async function runExecutor(options: BuildExecutorSchema, context: ExecutorContext) {
@@ -50,7 +50,7 @@ export default async function runExecutor(options: BuildExecutorSchema, context:
             tree.rename(filePath, `${relativeSrcRoot}/${options.outDir}/${relativePath}`)
         })
 
-        addFiles(tree, normalizedOptions)
+        addFiles(tree, normalizedOptions, relative(context.root, context.workspace.projects[context.projectName].root))
 
         printChanges(tree.listChanges())
     } finally {
