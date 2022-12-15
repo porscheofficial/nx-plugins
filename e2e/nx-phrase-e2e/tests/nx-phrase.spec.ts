@@ -86,7 +86,7 @@ async function setupTestProject() {
     ensureNxProject("@porscheofficial/nx-phrase", "dist/packages/nx-phrase")
 
     const { devDependencies } = readJson("package.json")
-    runCommand(`yarn add -D @nrwl/react@${devDependencies["@nrwl/cli"]}`)
+    runCommand(`yarn add -D @nrwl/react@${devDependencies["nx"]}`)
 
     await runNxCommandAsync(`generate @nrwl/react:application ${testProject}`)
     const projectJson = readJson(`apps/${testProject}/project.json`) as ProjectConfiguration
