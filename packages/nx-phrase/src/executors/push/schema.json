@@ -1,41 +1,42 @@
 {
-    "version": 2,
-    "outputCapture": "direct-nodejs",
-    "$schema": "http://json-schema.org/schema",
-    "cli": "nx",
-    "title": "phrase executor",
-    "description": "l10n utils",
-    "type": "object",
-    "properties": {
-        "projectId": {
-            "description": "Id of translation project in phrase",
-            "type": "string"
-        },
-        "branch": {
-            "description": "",
-            "type": "string"
-        },
-        "uploadLanguageId": {
-            "description": "",
-            "type": "string"
-        },
-        "sourceRoot": {
-            "description": "",
-            "type": "string"
-        },
-        "sourceGlob": {
-            "description": "",
-            "type": "string"
-        },
-        "ignoreGlob": {
-            "description": "",
-            "type": "string"
-        },
-        "workingDirectory": {
-            "description": "",
-            "type": "string"
-        }
-
+  "version": 2,
+  "outputCapture": "direct-nodejs",
+  "$schema": "http://json-schema.org/schema",
+  "title": "phrase executor",
+  "description": "l10n utils",
+  "type": "object",
+  "properties": {
+    "projectId": {
+      "description": "Id of translation project in phrase",
+      "type": "string"
     },
-    "required": ["projectId", "uploadLanguageId"]
+    "branch": {
+      "description": "",
+      "type": "string"
+    },
+    "uploadLanguageId": {
+      "description": "",
+      "type": "string"
+    },
+    "sourceRoot": {
+      "description": "",
+      "type": "string"
+    },
+    "sourceGlob": {
+      "description": "",
+      "type": "string"
+    },
+    "ignoreGlob": {
+      "description": "",
+      "type": "string"
+    },
+    "workingDirectory": {
+      "description": "",
+      "type": "string"
+    }
+  },
+  "required": [
+    "projectId",
+    "uploadLanguageId"
+  ]
 }

@@ -1,4 +1,4 @@
-import { Tree, names, getWorkspaceLayout, offsetFromRoot } from "@nrwl/devkit"
+import { Tree, names, getWorkspaceLayout, offsetFromRoot } from "@nx/devkit"
 import { existsSync, mkdirSync, writeFileSync } from "fs"
 import { resolve } from "path"
 

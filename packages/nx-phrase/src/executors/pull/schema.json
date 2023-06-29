@@ -1,40 +1,42 @@
 {
-    "version": 2,
-    "outputCapture": "direct-nodejs",
-    "$schema": "http://json-schema.org/schema",
-    "cli": "nx",
-    "title": "phrase executor",
-    "description": "l10n utils",
-    "type": "object",
-    "properties": {
-        "projectId": {
-            "description": "Id of translation project in phrase",
-            "type": "string"
-        },
-        "branch": {
-            "description": "",
-            "type": "string"
-        },
-        "fileFormat": {
-            "description": "",
-            "type": "string"
-        },
-        "output": {
-            "description": "",
-            "type": "string"
-        },
-        "workingDirectory": {
-            "description": "",
-            "type": "string"
-        },
-        "useSourceLocaleAsFallback": {
-            "description": "Emulate phrase fallback_locale behaviour via source_locale field. Only works with fileFormat react_simple_json",
-            "type": "boolean"
-        },
-        "useFallbackLocale": {
-            "description": "Pass fallback_locale during locale download to api. All translations that don't exist in the locale currently being downloaded will be complemented with the ones from the fallback_locale",
-            "type": "boolean"
-        }
+  "version": 2,
+  "outputCapture": "direct-nodejs",
+  "$schema": "http://json-schema.org/schema",
+  "title": "phrase executor",
+  "description": "l10n utils",
+  "type": "object",
+  "properties": {
+    "projectId": {
+      "description": "Id of translation project in phrase",
+      "type": "string"
     },
-    "required": ["projectId", "output"]
+    "branch": {
+      "description": "",
+      "type": "string"
+    },
+    "fileFormat": {
+      "description": "",
+      "type": "string"
+    },
+    "output": {
+      "description": "",
+      "type": "string"
+    },
+    "workingDirectory": {
+      "description": "",
+      "type": "string"
+    },
+    "useSourceLocaleAsFallback": {
+      "description": "Emulate phrase fallback_locale behaviour via source_locale field. Only works with fileFormat react_simple_json",
+      "type": "boolean"
+    },
+    "useFallbackLocale": {
+      "description": "Pass fallback_locale during locale download to api. All translations that don't exist in the locale currently being downloaded will be complemented with the ones from the fallback_locale",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "projectId",
+    "output"
+  ]
 }

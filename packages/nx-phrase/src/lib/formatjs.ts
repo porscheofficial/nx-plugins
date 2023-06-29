@@ -1,5 +1,5 @@
 import { extract as formatjsExtract, compile as formatjsCompile } from "@formatjs/cli-lib"
-import glob from "glob"
+import { sync } from "glob"
 import { writeFileSync } from "fs"
 
 export async function extract({
@@ -13,8 +13,8 @@ export async function extract({
     sourceRoot: string
     outputFile: string
 }) {
-    const files = glob.sync(`${sourceRoot}/${sourceGlob}`)
-    const ignoredFiles = glob.sync(`${sourceRoot}/${ignoreGlob}`)
+    const files = sync(`${sourceRoot}/${sourceGlob}`)
+    const ignoredFiles = sync(`${sourceRoot}/${ignoreGlob}`)
     const filteredFiles = files.filter((file) => !ignoredFiles.includes(file))
 
     const extracted = await formatjsExtract(filteredFiles, {})

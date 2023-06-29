@@ -1,5 +1,5 @@
 {
-    "npmScope": "@porscheofficial",
+    "name": "@porscheofficial/root",
     "affected": {
         "defaultBase": "main"
     },

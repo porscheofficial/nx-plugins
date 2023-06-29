@@ -1,6 +1,6 @@
 import { relative, resolve } from "path"
 
-import { ExecutorContext } from "@nrwl/devkit"
+import { ExecutorContext } from "@nx/devkit"
 import { readFile } from "fs-extra"
 
 import { InternalPhraseConfig } from "./config"

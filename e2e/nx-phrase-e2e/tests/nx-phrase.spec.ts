@@ -1,4 +1,4 @@
-import { ProjectConfiguration } from "@nrwl/devkit"
+import { ProjectConfiguration } from "@nx/devkit"
 import {
     ensureNxProject,
     runNxCommandAsync,
@@ -8,8 +8,8 @@ import {
     runCommand,
     runNxCommand,
     readFile,
-} from "@nrwl/nx-plugin/testing"
-import serve, { buffer, send } from "micro"
+} from "@nx/plugin/testing"
+import { buffer, send, serve } from "micro"
 import { load, dump } from "js-yaml"
 import { IncomingMessage, Server } from "http"
 import { AddressInfo } from "net"
@@ -61,11 +61,13 @@ function prepareProjectJsonSetup() {
 }
 
 async function startMockServer(cb: (req: IncomingMessage, body: string | Buffer) => void = () => {}) {
-    const server = serve(async (req, res) => {
-        const buf = await buffer(req)
-        cb(req, buf)
-        send(res, 201, {})
-    }) as unknown as Server
+    const server = new Server(
+        serve(async (req, res) => {
+            const buf = await buffer(req)
+            cb(req, buf)
+            send(res, 201, {})
+        })
+    )
 
     const port = await new Promise<number>((resolve) => {
         server.listen({ port: 0, host: "127.0.0.1" }, () => {
@@ -86,7 +88,7 @@ async function setupTestProject() {
     ensureNxProject("@porscheofficial/nx-phrase", "dist/packages/nx-phrase")
 
     const { devDependencies } = readJson("package.json")
-    runCommand(`yarn add -D @nrwl/react@${devDependencies["nx"]}`)
+    runCommand(`yarn add -D @nrwl/react@${devDependencies["nx"]}`, {})
 
     await runNxCommandAsync(`generate @nrwl/react:application ${testProject}`)
     const projectJson = readJson(`apps/${testProject}/project.json`) as ProjectConfiguration

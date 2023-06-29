@@ -1,4 +1,4 @@
-import { ExecutorContext } from "@nrwl/devkit"
+import { ExecutorContext } from "@nx/devkit"
 
 import { default as pull } from "../pull/executor"
 import { default as push } from "../push/executor"

@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "fs-extra"
 import { resolve } from "path"
 
 import { NonSensitiveArgs } from "./types"
-import { ExecutorContext } from "@nrwl/devkit"
+import { ExecutorContext } from "@nx/devkit"
 import { load } from "js-yaml"
 import { PhraseClientConfig } from "./phrase"
 import { BuildExecutorSchema } from "../executors/build/schema"
