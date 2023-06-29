@@ -9,7 +9,7 @@ import {
     runNxCommand,
     readFile,
 } from "@nx/plugin/testing"
-import serve, { buffer, send } from "micro"
+import { buffer, send, serve } from "micro"
 import { load, dump } from "js-yaml"
 import { IncomingMessage, Server } from "http"
 import { AddressInfo } from "net"
@@ -61,11 +61,13 @@ function prepareProjectJsonSetup() {
 }
 
 async function startMockServer(cb: (req: IncomingMessage, body: string | Buffer) => void = () => {}) {
-    const server = serve(async (req, res) => {
-        const buf = await buffer(req)
-        cb(req, buf)
-        send(res, 201, {})
-    }) as unknown as Server
+    const server = new Server(
+        serve(async (req, res) => {
+            const buf = await buffer(req)
+            cb(req, buf)
+            send(res, 201, {})
+        })
+    )
 
     const port = await new Promise<number>((resolve) => {
         server.listen({ port: 0, host: "127.0.0.1" }, () => {
