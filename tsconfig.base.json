@@ -16,7 +16,6 @@
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
-            "@porscheofficial/nx-oagen": ["packages/nx-oagen/src/index.ts"],
             "@porscheofficial/nx-phrase": ["packages/nx-phrase/src/index.ts"]
         }
     },
