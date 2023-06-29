@@ -8,7 +8,6 @@ inputs:
         type: choice
         options:
             - "nx-phrase"
-            - "nx-oagen"
     type:
         description: "Type of version bump (major release, minor release or patch)"
         required: true
