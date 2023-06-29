@@ -6,7 +6,7 @@ import {
     Tree,
     updateProjectConfiguration,
     readJson,
-} from "@nrwl/devkit"
+} from "@nx/devkit"
 import { join } from "path"
 import { normalizeOptions, NPM_SCOPE } from "../../lib/utils"
 import { NxPhraseGeneratorSchema } from "./schema"

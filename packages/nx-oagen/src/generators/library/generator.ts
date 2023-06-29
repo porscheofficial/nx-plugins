@@ -1,5 +1,5 @@
-import { Tree, updateProjectConfiguration, readProjectConfiguration, generateFiles } from "@nrwl/devkit"
-import { libraryGenerator } from "@nrwl/workspace/generators"
+import { Tree, updateProjectConfiguration, readProjectConfiguration, generateFiles } from "@nx/devkit"
+import { libraryGenerator } from "@nx/node"
 import { join } from "path"
 import { normalizeOptions, NPM_SCOPE } from "../../utils"
 import { defaults } from "./defaults"
@@ -7,11 +7,13 @@ import { NxOagenGeneratorSchema } from "./schema"
 
 export default async function (tree: Tree, options: NxOagenGeneratorSchema) {
     const normalizedOptions = normalizeOptions(tree, options)
+
     await libraryGenerator(tree, {
         ...options,
         name: normalizedOptions.projectName,
         testEnvironment: "node",
         skipFormat: true,
+        compiler: "swc",
     })
 
     const additionalProperties = { ...defaults[options.generator], ...options.additionalProperties }

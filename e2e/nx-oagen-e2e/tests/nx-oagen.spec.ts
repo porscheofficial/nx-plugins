@@ -1,5 +1,5 @@
-import { ProjectConfiguration, readWorkspaceConfiguration } from "@nrwl/devkit"
-import { ensureNxProject, runNxCommandAsync, uniq, readJson, updateFile } from "@nrwl/nx-plugin/testing"
+import { ProjectConfiguration, readWorkspaceConfiguration } from "@nx/devkit"
+import { ensureNxProject, runNxCommandAsync, uniq, readJson, updateFile } from "@nx/plugin/testing"
 
 describe("nx-oagen e2e", () => {
     it("should create library project and run code builder", async () => {

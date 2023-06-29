@@ -4,7 +4,7 @@ This plugin helps you with your nx react app to extract translations defined via
 
 The actual extraction is handled by `@formatjs/cli`'s `extract` command.
 
-For reference: This plugin was generated with `nx g @nrwl/nx-plugin:plugin nx-phrase`
+For reference: This plugin was generated with `nx g @nx/plugin:plugin nx-phrase`
 
 ## Usage
 

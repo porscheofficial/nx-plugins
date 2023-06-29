@@ -1,6 +1,6 @@
 import { resolve } from "path"
 
-import { ExecutorContext } from "@nrwl/devkit"
+import { ExecutorContext } from "@nx/devkit"
 import nock from "nock"
 
 import executor from "./executor"

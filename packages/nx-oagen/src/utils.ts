@@ -1,4 +1,4 @@
-import { Tree, names, getWorkspaceLayout, offsetFromRoot } from "@nrwl/devkit"
+import { Tree, names, getWorkspaceLayout, offsetFromRoot } from "@nx/devkit"
 import { NxOagenGeneratorSchema } from "./generators/library/schema"
 import { Generator } from "./types"
 

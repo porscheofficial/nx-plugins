@@ -1,4 +1,4 @@
-import { installPackagesTask, addDependenciesToPackageJson, Tree } from "@nrwl/devkit"
+import { installPackagesTask, addDependenciesToPackageJson, Tree } from "@nx/devkit"
 import { NxOagenGeneratorSchema } from "./schema"
 import { libraryGenerator } from "../../index"
 import { AdditionalProperties } from "../../types"

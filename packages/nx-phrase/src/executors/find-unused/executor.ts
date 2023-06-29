@@ -1,4 +1,4 @@
-import { ExecutorContext } from "@nrwl/devkit"
+import { ExecutorContext } from "@nx/devkit"
 import { existsSync, writeFileSync } from "fs"
 import { resolve } from "path"
 import { prepareOutput } from "../../lib/utils"

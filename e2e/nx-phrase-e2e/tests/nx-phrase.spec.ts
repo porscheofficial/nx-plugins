@@ -1,4 +1,4 @@
-import { ProjectConfiguration } from "@nrwl/devkit"
+import { ProjectConfiguration } from "@nx/devkit"
 import {
     ensureNxProject,
     runNxCommandAsync,
@@ -8,7 +8,7 @@ import {
     runCommand,
     runNxCommand,
     readFile,
-} from "@nrwl/nx-plugin/testing"
+} from "@nx/plugin/testing"
 import serve, { buffer, send } from "micro"
 import { load, dump } from "js-yaml"
 import { IncomingMessage, Server } from "http"
@@ -86,7 +86,7 @@ async function setupTestProject() {
     ensureNxProject("@porscheofficial/nx-phrase", "dist/packages/nx-phrase")
 
     const { devDependencies } = readJson("package.json")
-    runCommand(`yarn add -D @nrwl/react@${devDependencies["nx"]}`)
+    runCommand(`yarn add -D @nrwl/react@${devDependencies["nx"]}`, {})
 
     await runNxCommandAsync(`generate @nrwl/react:application ${testProject}`)
     const projectJson = readJson(`apps/${testProject}/project.json`) as ProjectConfiguration

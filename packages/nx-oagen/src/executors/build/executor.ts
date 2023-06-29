@@ -1,6 +1,6 @@
 import { BuildExecutorSchema } from "./schema"
 import { generate } from "./lib/generate"
-import { ExecutorContext, formatFiles, generateFiles, names, offsetFromRoot, visitNotIgnoredFiles } from "@nrwl/devkit"
+import { ExecutorContext, formatFiles, generateFiles, names, offsetFromRoot, visitNotIgnoredFiles } from "@nx/devkit"
 import { FsTree, Tree, flushChanges, printChanges } from "@nrwl/tao/src/shared/tree"
 import { NormalizedSchema, normalizeOptions, NPM_SCOPE } from "../../utils"
 import { join, relative } from "path"

@@ -17,7 +17,7 @@ This project was generated using `create-nx-plugin porscheofficial`. All of the 
 
 To add more plugins to this repository execute:
 
-    nx g @nrwl/nx-plugin:plugin your-plugin-name
+    nx g @nx/plugin:plugin your-plugin-name
 
 **Note:** It is recommended to use dashes in your plugin name.
 

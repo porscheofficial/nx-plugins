@@ -1,7 +1,7 @@
 import { BuildExecutorSchema } from "./schema"
 import executor from "./executor"
 import { mkdtempSync, rmSync, ensureDirSync, existsSync } from "fs-extra"
-import { ExecutorContext } from "@nrwl/devkit"
+import { ExecutorContext } from "@nx/devkit"
 import { resolve } from "path"
 
 const options: BuildExecutorSchema = {

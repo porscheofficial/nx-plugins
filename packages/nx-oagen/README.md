@@ -2,7 +2,7 @@
 
 This plugin helps with setting up nx libraries for typescript api-clients that are generated using openapi-generator. It is merely a wrapper for the tools provided by [openapi-generator](https://github.com/OpenAPITools/openapi-generator).
 
-For reference: This library was generated with `nx g @nrwl/nx-plugin:plugin nx-oagen`.
+For reference: This library was generated with `nx g @nx/plugin:plugin nx-oagen`.
 
 ## Usage
 
@@ -59,7 +59,7 @@ In your project.json add a target that looks smiliar to this:
 | --- | --- | --- |
 | @openapitools/openapi-generator-cli | 2.x | Actual code generation. <br/>**Attention:** Since this uses java you'll also need a working java runtime on your machine |
 
- <!-- | @nrwl/node | latest |  | -->
+ <!-- | @nx/node | latest |  | -->
 
 ## Running unit tests
 

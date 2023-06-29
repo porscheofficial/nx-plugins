@@ -1,18 +1,19 @@
 {
-    "$schema": "http://json-schema.org/schema",
-    "cli": "nx",
-    "$id": "NxPhrase",
-    "title": "",
-    "type": "object",
-    "properties": {
-        "projectName": {
-            "type": "string",
-            "description": "nx project name",
-            "$default": {
-                "$source": "argv",
-                "index": 0
-            }
-        }
-    },
-    "required": ["projectName"]
+  "$schema": "http://json-schema.org/schema",
+  "$id": "NxPhrase",
+  "title": "",
+  "type": "object",
+  "properties": {
+    "projectName": {
+      "type": "string",
+      "description": "nx project name",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      }
+    }
+  },
+  "required": [
+    "projectName"
+  ]
 }
