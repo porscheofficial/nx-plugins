@@ -138,7 +138,6 @@ export default async function runExecutor(options: Partial<NonSensitiveArgs>, co
                 return true
             }
         })
-        console.log(deduplicatedPhraseTranslationKeys)
 
         // report duplicated keys
         if (phraseDuplicatedKeys.length > 0) {
