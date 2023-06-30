@@ -16,27 +16,6 @@ import { AddressInfo } from "net"
 
 const testProject = "translation-project"
 
-function preparePhraseYmlSetup() {
-    // adjust phrase config file
-    const phraseConfig = load(readFile(".phrase.yml")) as { phrase: Record<string, Record<string, string>> }
-    const newPhraseConfig = {
-        phrase: {
-            [testProject]: {
-                ...phraseConfig.phrase[testProject],
-                project_id: "project_id",
-                upload_language_id: "upload_language_id",
-                output: "tmp/delete/me",
-            },
-        },
-    }
-    updateFile(".phrase.yml", dump(newPhraseConfig))
-
-    // clear project.json options
-    const projectJson = readJson(`apps/${testProject}/project.json`)
-    projectJson.targets.translation.options = {}
-    updateFile(`apps/${testProject}/project.json`, JSON.stringify(projectJson, null, 2))
-}
-
 function prepareProjectJsonSetup() {
     // clear .phrase.yml
     const phraseConfig = load(readFile(".phrase.yml")) as { phrase: Record<string, Record<string, string>> }
@@ -88,9 +67,9 @@ async function setupTestProject() {
     ensureNxProject("@porscheofficial/nx-phrase", "dist/packages/nx-phrase")
 
     const { devDependencies } = readJson("package.json")
-    runCommand(`yarn add -D @nrwl/react@${devDependencies["nx"]}`, {})
+    runCommand(`yarn add -D @nx/react@${devDependencies["nx"]}`, {})
 
-    await runNxCommandAsync(`generate @nrwl/react:application ${testProject}`)
+    await runNxCommandAsync(`generate @nx/react:application ${testProject}`)
     const projectJson = readJson(`apps/${testProject}/project.json`) as ProjectConfiguration
     expect(projectJson).toBeTruthy()
 
@@ -122,12 +101,4 @@ describe("nx-phrase e2e", () => {
 
         expect(postMock).toHaveBeenCalledTimes(1)
     }, 120000)
-
-    it.todo(
-        "should successfully pull translations"
-        // , async () => {
-        //     const { stderr, stdout } = await runNxCommandAsync(`run ${testProject}:translation:pull`)
-        //     console.log(stdout, stderr)
-        // }
-    )
 })
