@@ -1,20 +1,20 @@
 {
-  "name": "@porscheofficial/nx-phrase",
-  "version": "0.1.5",
-  "repository": {
-    "type": "url",
-    "url": "https://github.com/porscheofficial/nx-plugins",
-    "directory": "packages/nx-phrase"
-  },
-  "license": "MIT",
-  "main": "src/index.js",
-  "generators": "./generators.json",
-  "executors": "./executors.json",
-  "peerDependencies": {
-    "js-yaml": "^4.x",
-    "form-data": "^4.x",
-    "@formatjs/cli-lib": "^5.x",
-    "glob": "^8.x",
-    "fs-extra": "^10.x"
-  }
+    "name": "@porscheofficial/nx-phrase",
+    "version": "0.1.5",
+    "repository": {
+        "type": "url",
+        "url": "https://github.com/porscheofficial/nx-plugins",
+        "directory": "packages/nx-phrase"
+    },
+    "license": "MIT",
+    "main": "src/index.js",
+    "generators": "./generators.json",
+    "executors": "./executors.json",
+    "peerDependencies": {
+        "@formatjs/cli-lib": "6.1.3",
+        "fs-extra": "11.1.1",
+        "form-data": "4.0.0",
+        "glob": "10.3.1",
+        "js-yaml": "4.1.0"
+    }
 }

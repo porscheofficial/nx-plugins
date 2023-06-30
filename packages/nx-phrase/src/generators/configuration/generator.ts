@@ -20,7 +20,6 @@ export default async function (tree: Tree, options: NxPhraseGeneratorSchema) {
         await installDependencies()
     }
 
-    // addDependenciesToPackageJson("")
     const projectConfiguration = readProjectConfiguration(tree, projectName)
     projectConfiguration.targets = {
         ...projectConfiguration.targets,
@@ -42,6 +41,7 @@ export default async function (tree: Tree, options: NxPhraseGeneratorSchema) {
             },
         },
     }
+
     updateProjectConfiguration(tree, projectName, projectConfiguration)
 
     if (tree.isFile(".gitignore")) {
