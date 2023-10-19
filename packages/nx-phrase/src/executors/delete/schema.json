@@ -1,0 +1,24 @@
+{
+    "version": 2,
+    "outputCapture": "direct-nodejs",
+    "$schema": "http://json-schema.org/schema",
+    "cli": "nx",
+    "title": "phrase executor",
+    "description": "find unused translations",
+    "type": "object",
+    "properties": {       
+        "projectId": {
+            "description": "Id of translation project in phrase",
+            "type": "string"
+        },
+        "branch": {
+            "description": "",
+            "type": "string"
+        },
+        "inputFile": {
+            "description": "json-file containing array of unused keys",
+            "type": "string"
+        }
+    },
+    "required": ["projectId", "inputFile"]
+}
