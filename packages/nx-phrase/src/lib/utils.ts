@@ -1,6 +1,7 @@
 import { Tree, names, getWorkspaceLayout, offsetFromRoot } from "@nx/devkit"
 import { existsSync, mkdirSync, writeFileSync } from "fs"
 import { resolve } from "path"
+import { DEFAULT_PHRASE_LANGUAGE_NAME } from "./consts"
 
 export const NPM_SCOPE = "@porscheofficial"
 
@@ -64,4 +65,25 @@ export function prepareOutput({
     }
 
     return baseOutputPath
+}
+
+export interface LanguageAndRegion {
+    language: string
+    region?: string
+}
+
+export function getLanguageAndRegion(locale: string): LanguageAndRegion {
+    // check if locale is supported, if not it throws an error
+    let [normalizedLocale] = Intl.NumberFormat.supportedLocalesOf(locale)
+
+    if (!normalizedLocale) {
+        normalizedLocale = DEFAULT_PHRASE_LANGUAGE_NAME
+    }
+    if (normalizedLocale.indexOf("-") === -1) {
+        return {
+            language: normalizedLocale,
+        }
+    }
+    const [language, region] = normalizedLocale.split("-")
+    return { language, region }
 }

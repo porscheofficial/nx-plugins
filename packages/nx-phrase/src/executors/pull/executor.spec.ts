@@ -7,6 +7,7 @@ import executor from "./executor"
 import { NonSensitiveArgs } from "../../lib/types"
 import { PhraseClient } from "../../lib/phrase"
 import { readFileSync } from "fs"
+import { PhraseFileFormat } from "../../lib/consts"
 
 const options: Partial<NonSensitiveArgs> = {
     projectId: "projectId",
@@ -26,18 +27,18 @@ function nockForProject(projectId = "project_id") {
 
         .get(/\/projects\/[^/]+\/locales\/[^/]+\/download/)
         .matchHeader("Authorization", /token .*/)
-        .query({ file_format: "react_simple_json" })
+        .query({ file_format: PhraseFileFormat.REACT_SIMPLE_JSON })
         .thrice()
         .reply(429, { message: "Concurrency limit exceeded" })
 
         .get(/\/projects\/[^/]+\/locales\/french\/download/)
         .matchHeader("Authorization", /token .*/)
-        .query({ file_format: "react_simple_json" })
+        .query({ file_format: PhraseFileFormat.REACT_SIMPLE_JSON })
         .reply(200, french)
 
         .get(/\/projects\/[^/]+\/locales\/[^/]+\/download/)
         .matchHeader("Authorization", /token .*/)
-        .query({ file_format: "react_simple_json" })
+        .query({ file_format: PhraseFileFormat.REACT_SIMPLE_JSON })
         .twice()
         .replyWithFile(200, `${TEST_ASSETS_DIR}/localeDownloadResponse.json`)
 }

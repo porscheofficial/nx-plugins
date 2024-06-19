@@ -6,6 +6,7 @@ import { ExecutorContext } from "@nx/devkit"
 import { load } from "js-yaml"
 import { PhraseClientConfig } from "./phrase"
 import { BuildExecutorSchema } from "../executors/build/schema"
+import { PhraseFileFormat } from "./consts"
 
 interface ConfigFileFormat {
     phrase: {
@@ -99,12 +100,12 @@ export function getConfig(
     const config = {
         output,
         branch: options.branch,
-        fileFormat: options.fileFormat ?? "react_simple_json",
+        fileFormat: options.fileFormat ?? PhraseFileFormat.REACT_SIMPLE_JSON,
         ignoreGlob: options.ignoreGlob ?? "**/*.d.ts",
         projectId: options.projectId,
         sourceRoot: options.sourceRoot ?? sourceRoot,
         sourceGlob: options.sourceGlob ?? "**/*.{ts,tsx}",
-        uploadLanguageId: options.uploadLanguageId || "default",
+        uploadLanguageId: options.uploadLanguageId,
         sourceKeyTransformer: options.sourceKeyTransformer,
         phraseKeyTransformer: options.phraseKeyTransformer,
         sourceKeyFilter: options.sourceKeyFilter,

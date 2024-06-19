@@ -82,7 +82,7 @@ All operations have the following options in common:
 | projectId | Id of the phrase project to use. Can be found in Phrase project settings under API, or the "☁️ ID"-button on the project overview. | ✅ | - |
 | branch | In case you're working with branches in phrase. | ❌ | - |
 
-Other options vary vary depending on the executed operation. It makes sense to set at least `projectId`, `output` and `uploadLanguageId` in the shared options of the executor configuration, to get you started quickly.
+Other options vary depending on the executed operation. It makes sense to set at least `projectId`, `output` and `uploadLanguageId` in the shared options of the executor configuration, to get you started quickly.
 
 All available and required options per operation are explained in the next section.
 
