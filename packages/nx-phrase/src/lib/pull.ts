@@ -2,6 +2,8 @@ import { mkdirs, remove, writeFile } from "fs-extra"
 import { resolve } from "path"
 import { InternalPhraseConfig } from "./config"
 import { PhraseClient, PhraseLocale } from "./phrase"
+import { getLanguageAndRegion } from "./utils"
+import { PhraseFileFormat } from "./consts"
 
 type TranslationsMap = Record<string, string>
 
@@ -53,7 +55,14 @@ export async function writeTranslations(translations: TranslationsMap, config: I
     // write each translation in its own file
     const localeNames = Object.keys(translations)
     for (const locale of localeNames) {
-        const filePath = resolve(config.output, `${locale}.json`)
+        const { language, region } = getLanguageAndRegion(locale)
+        const fileName =
+            config.fileFormat === PhraseFileFormat.PROPERTIES
+                ? region
+                    ? `message_${language}_${region}.properties`
+                    : `message_${language}.properties`
+                : `${locale}.json`
+        const filePath = resolve(config.output, fileName)
         await writeFile(filePath, translations[locale])
     }
 }
@@ -67,7 +76,7 @@ export async function pull(config: InternalPhraseConfig) {
     const translations = await pull.downloadTranslations(locales)
 
     // fake fallback_locale functionality via source_locale
-    if (config.useSourceLocaleAsFallback) {
+    if (config.useSourceLocaleAsFallback && config.fileFormat === PhraseFileFormat.REACT_SIMPLE_JSON) {
         for (const locale of locales) {
             if (locale.source_locale && locale.source_locale.name in translations) {
                 translations[locale.name] = JSON.stringify(

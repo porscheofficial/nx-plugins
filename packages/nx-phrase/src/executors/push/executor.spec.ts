@@ -10,6 +10,7 @@ const TEST_ASSETS_DIR = resolve(__dirname, "../../../test")
 
 const options: Partial<NonSensitiveArgs> = {
     projectId: "projectId",
+    uploadLanguageId: "uploadLanguageId",
 }
 
 describe("Push", () => {

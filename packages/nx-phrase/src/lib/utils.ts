@@ -65,3 +65,25 @@ export function prepareOutput({
 
     return baseOutputPath
 }
+
+export interface LanguageAndRegion {
+    language: string
+    region?: string
+}
+
+export function getLanguageAndRegion(locale: string): LanguageAndRegion {
+    if (!locale) {
+        throw new Error("Incorrect locale information provided")
+    }
+    const normalizedLocale = locale.replace(/_|–/g, "-")
+    if (normalizedLocale.indexOf("-") === -1) {
+        return {
+            language: normalizedLocale.toLocaleLowerCase(),
+        }
+    }
+    const [language, region, ...unsupportedLocaleParts] = normalizedLocale.split("-")
+    if (unsupportedLocaleParts.length > 0) {
+        throw new Error("Incorrect locale information provided")
+    }
+    return { language: language.toLocaleLowerCase(), region: region.toLocaleUpperCase() }
+}

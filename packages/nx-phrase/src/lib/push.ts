@@ -8,6 +8,7 @@ import { compile, extract } from "./formatjs"
 import { PhraseClient } from "./phrase"
 import { prepareOutput } from "./utils"
 import debug from "debug"
+import { PhraseFileFormat } from "./consts"
 
 const logger = debug("nx-plugins.nx-phrase.lib.push")
 
@@ -44,7 +45,7 @@ export async function uploadTranslations(config: InternalPhraseConfig, compilati
         {
             projectId: config.projectId,
             locale_id: config.uploadLanguageId,
-            file_format: "react_simple_json",
+            file_format: PhraseFileFormat.REACT_SIMPLE_JSON,
             update_translations: true,
             skip_upload_tags: true,
         },
