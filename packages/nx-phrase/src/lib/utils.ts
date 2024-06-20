@@ -73,17 +73,18 @@ export interface LanguageAndRegion {
 }
 
 export function getLanguageAndRegion(locale: string): LanguageAndRegion {
-    // check if locale is supported, if not it throws an error
-    let [normalizedLocale] = Intl.NumberFormat.supportedLocalesOf(locale)
-
-    if (!normalizedLocale) {
-        normalizedLocale = DEFAULT_PHRASE_LANGUAGE_NAME
+    if (!locale) {
+        throw new Error("Incorrect locale information provided")
     }
+    const normalizedLocale = locale.replace(/_|–/g, "-")
     if (normalizedLocale.indexOf("-") === -1) {
         return {
-            language: normalizedLocale,
+            language: normalizedLocale.toLocaleLowerCase(),
         }
     }
-    const [language, region] = normalizedLocale.split("-")
-    return { language, region }
+    const [language, region, ...unsupportedLocaleParts] = normalizedLocale.split("-")
+    if (unsupportedLocaleParts.length > 0) {
+        throw new Error("Incorrect locale information provided")
+    }
+    return { language: language.toLocaleLowerCase(), region: region.toLocaleUpperCase() }
 }

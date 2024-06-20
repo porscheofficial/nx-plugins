@@ -5,13 +5,13 @@ describe("utils", () => {
     it.each`
         locale                          | expectedLanguage                | expectedRegion
         ${DEFAULT_PHRASE_LANGUAGE_NAME} | ${DEFAULT_PHRASE_LANGUAGE_NAME} | ${undefined}
-        ${"blabla"}                     | ${DEFAULT_PHRASE_LANGUAGE_NAME} | ${undefined}
-        ${undefined}                    | ${DEFAULT_PHRASE_LANGUAGE_NAME} | ${undefined}
         ${"en"}                         | ${"en"}                         | ${undefined}
         ${"EN"}                         | ${"en"}                         | ${undefined}
         ${"en-US"}                      | ${"en"}                         | ${"US"}
         ${"en-us"}                      | ${"en"}                         | ${"US"}
         ${"EN-us"}                      | ${"en"}                         | ${"US"}
+        ${"blabla"}                     | ${"blabla"}                     | ${undefined}
+        ${"AsDfD-LuHTgg"}               | ${"asdfd"}                      | ${"LUHTGG"}
     `(
         "should get language '$expectedLanguage' & region '$expectedRegion' for locale '$locale'",
         ({ locale, expectedLanguage, expectedRegion }) => {
@@ -24,9 +24,9 @@ describe("utils", () => {
     it.each`
         locale
         ${""}
-        ${"en-US-CA"}
-        ${"en-DDD"}
-        ${"blub-US"}
+        ${undefined}
+        ${null}
+        ${"en-US-CA_DE"}
     `("should throw an error for invalid locale '$locale'", ({ locale }) => {
         expect(() => {
             getLanguageAndRegion(locale)
