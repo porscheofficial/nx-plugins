@@ -19,6 +19,19 @@
                 "passWithNoTests": true
             }
         },
+        "check-types": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "tsc --noEmit -p packages/nx-phrase/tsconfig.spec.json"
+            }
+        },
+        "test-all": {
+            "executor": "nx:run-commands",
+            "options": {
+                "commands": ["nx run nx-phrase:lint", "nx run nx-phrase:check-types", "nx run nx-phrase:test"],
+                "parallel": false
+            }
+        },
         "build": {
             "executor": "@nx/js:tsc",
             "outputs": ["{options.outputPath}"],

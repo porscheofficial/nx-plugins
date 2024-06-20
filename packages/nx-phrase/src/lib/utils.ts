@@ -1,7 +1,6 @@
 import { Tree, names, getWorkspaceLayout, offsetFromRoot } from "@nx/devkit"
 import { existsSync, mkdirSync, writeFileSync } from "fs"
 import { resolve } from "path"
-import { DEFAULT_PHRASE_LANGUAGE_NAME } from "./consts"
 
 export const NPM_SCOPE = "@porscheofficial"
 
