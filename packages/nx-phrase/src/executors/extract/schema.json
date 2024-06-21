@@ -4,19 +4,11 @@
     "$schema": "http://json-schema.org/schema",
     "cli": "nx",
     "title": "phrase executor",
-    "description": "extract L10N keys from source code and upload them to phrase",
+    "description": "extract L10N keys from source code and write them into the file system",
     "type": "object",
     "properties": {
-        "projectId": {
-            "description": "Phrase project id. Can be found in Phrase project settings under API, or the '☁️ ID'-button on the project overview.",
-            "type": "string"
-        },
-        "branch": {
-            "description": "a branch in phrase (optional)",
-            "type": "string"
-        },
-        "uploadLanguageId": {
-            "description": "Language ID to use when uploading translations. Can be found in the API section when editing a language",
+        "output": {
+            "description": "Path relative to your project's root directory where the extracted L10N keys are written",
             "type": "string"
         },
         "sourceRoot": {
@@ -36,5 +28,5 @@
             "type": "string"
         }
     },
-    "required": ["projectId", "uploadLanguageId"]
+    "required": ["output"]
 }

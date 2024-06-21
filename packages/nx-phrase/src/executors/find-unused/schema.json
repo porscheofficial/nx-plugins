@@ -4,11 +4,11 @@
     "$schema": "http://json-schema.org/schema",
     "cli": "nx",
     "title": "phrase executor",
-    "description": "find unused translations",
+    "description": "find L10N keys that are no longer used in the source code and are safe to delete from Phrase",
     "type": "object",
-    "properties": {       
+    "properties": {
         "projectId": {
-            "description": "Id of translation project in phrase",
+            "description": "Phrase project id. Can be found in Phrase project settings under API, or the '☁️ ID'-button on the project overview.",
             "type": "string"
         },
         "sourceKeyTransformer": {
@@ -28,23 +28,23 @@
             "type": "string"
         },
         "branch": {
-            "description": "",
+            "description": "a branch in phrase (optional)",
             "type": "string"
         },
         "sourceRoot": {
-            "description": "",
+            "description": "The root directory of the source code",
             "type": "string"
         },
         "sourceGlob": {
-            "description": "",
+            "description": "The glob pattern used to search for source files containing translations",
             "type": "string"
         },
         "ignoreGlob": {
-            "description": "",
+            "description": "The glob pattern used to ignore some files that would otherwise be included by sourceGlob",
             "type": "string"
         },
         "workingDirectory": {
-            "description": "",
+            "description": "The directory below the project root directory where the plugin stores temporary data. If not specified, it is called '.nx-phrase'.",
             "type": "string"
         }
     },

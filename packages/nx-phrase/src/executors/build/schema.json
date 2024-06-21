@@ -1,72 +1,77 @@
 {
-  "version": 2,
-  "outputCapture": "direct-nodejs",
-  "$schema": "http://json-schema.org/schema",
-  "title": "phrase executor",
-  "description": "l10n utils",
-  "type": "object",
-  "properties": {
-    "operation": {
-      "description": "pull or push",
-      "type": "string",
-      "default": "pull"
+    "version": 2,
+    "outputCapture": "direct-nodejs",
+    "$schema": "http://json-schema.org/schema",
+    "cli": "nx",
+    "title": "phrase executor",
+    "description": "run one of the operations implemented by the other phrase executors",
+    "type": "object",
+    "properties": {
+        "operation": {
+            "description": "pull, push, extract, or find-unused",
+            "type": "string",
+            "default": "pull"
+        },
+        "projectId": {
+            "description": "Phrase project id. Can be found in Phrase project settings under API, or the '☁️ ID'-button on the project overview.",
+            "type": "string"
+        },
+        "branch": {
+            "description": "(optional) branch in phrase",
+            "type": "string"
+        },
+        "fileFormat": {
+            "description": "(optional) File format to download from phrase. See https://help.phrase.com/help/supported-platforms-and-formats",
+            "type": "string"
+        },
+        "output": {
+            "description": "(optional) Path relative to your project's root directory where downloaded translations files will be placed",
+            "type": "string"
+        },
+        "uploadLanguageId": {
+            "description": "Language ID to use when uploading translations. Can be found in the API section when editing a language",
+            "type": "string"
+        },
+        "sourceRoot": {
+            "description": "(optional) Source root override, in case some of your sources are not located in your project's sourceRoot",
+            "type": "string"
+        },
+        "sourceGlob": {
+            "description": "(optional) Glob pattern used to search for files containing translations",
+            "type": "string"
+        },
+        "ignoreGlob": {
+            "description": "(optional) Glob pattern to ignore some files that would otherwise be included by sourceGlob",
+            "type": "string"
+        },
+        "workingDirectory": {
+            "description": "The directory below the project root directory where the plugin stores temporary data. If not specified, it is called '.nx-phrase'.",
+            "type": "string"
+        },
+        "sourceKeyTransformer": {
+            "description": "(optional) Path to file exporting a transform function for keys extracted from the source",
+            "type": "string"
+        },
+        "phraseKeyTransformer": {
+            "description": "(optional) Path to file exporting a transform function for keys downloaded from phrase",
+            "type": "string"
+        },
+        "sourceKeyFilter": {
+            "description": "(optional) Path to file containing function to filter keys extracted from source",
+            "type": "string"
+        },
+        "phraseKeyFilter": {
+            "description": "(optional) Path to file containing function to filter keys downloaded from phrase",
+            "type": "string"
+        },
+        "useSourceLocaleAsFallback": {
+            "description": "(optional) Emulate phrase fallback_locale behaviour via source_locale field. Only works with fileFormat react_simple_json",
+            "type": "boolean"
+        },
+        "useFallbackLocale": {
+            "description": "(optional) Pass fallback_locale during locale download to api. All translations that don't exist in the locale currently being downloaded will be complemented with the ones from the fallback_locale",
+            "type": "boolean"
+        }
     },
-    "projectId": {
-      "description": "Phrase project id. Can be found in Phrase project settings under API, or the '☁️ ID'-button on the project overview.",
-      "type": "string"
-    },
-    "branch": {
-      "description": "(optional) branch in phrase",
-      "type": "string"
-    },
-    "fileFormat": {
-      "description": "(optional) File format to download from phrase. See https://help.phrase.com/help/supported-platforms-and-formats",
-      "type": "string"
-    },
-    "output": {
-      "description": "(optional) Path relative to your project's root directory where downloaded translations files will be placed",
-      "type": "string"
-    },
-    "uploadLanguageId": {
-      "description": "Language ID to use when uploading translations. Can be found in the API section when editing a language",
-      "type": "string"
-    },
-    "sourceRoot": {
-      "description": "(optional) Source root override, in case some of your sources are not located in your project's sourceRoot",
-      "type": "string"
-    },
-    "sourceGlob": {
-      "description": "(optional) Glob pattern used to search for files containing translations",
-      "type": "string"
-    },
-    "ignoreGlob": {
-      "description": "(optional) Glob pattern to ignore some files that would otherwise be included by sourceGlob",
-      "type": "string"
-    },
-    "sourceKeyTransformer": {
-      "description": "(optional) Path to file exporting a transform function for keys extracted from the source",
-      "type": "string"
-    },
-    "phraseKeyTransformer": {
-      "description": "(optional) Path to file exporting a transform function for keys downloaded from phrase",
-      "type": "string"
-    },
-    "sourceKeyFilter": {
-      "description": "(optional) Path to file containing function to filter keys extracted from source",
-      "type": "string"
-    },
-    "phraseKeyFilter": {
-      "description": "(optional) Path to file containing function to filter keys downloaded from phrase",
-      "type": "string"
-    },
-    "useSourceLocaleAsFallback": {
-      "description": "(optional) Emulate phrase fallback_locale behaviour via source_locale field. Only works with fileFormat react_simple_json",
-      "type": "boolean"
-    },
-    "useFallbackLocale": {
-      "description": "(optional) Pass fallback_locale during locale download to api. All translations that don't exist in the locale currently being downloaded will be complemented with the ones from the fallback_locale",
-      "type": "boolean"
-    }
-  },
-  "required": []
+    "required": ["projectId", "uploadLanguageId"]
 }

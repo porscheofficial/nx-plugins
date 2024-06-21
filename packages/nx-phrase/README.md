@@ -97,6 +97,17 @@ This operation pulls (i.e. downloads) translations from phrase into the configur
 | branch | In case you're working with branches in phrase. | ❌ | - |
 | useSourceLocaleAsFallback | Emulate phrase fallback_locale behavior via source_locale field. This only works with `react_simple_json` fileFormat | ❌ | false |
 
+#### Extract
+
+This operation extracts translations from the source code and stores them into a json file (format `react_simple_json`).
+
+| Name | What does it do? | Required | Default |
+| --- | --- | :-: | :-: |
+| output | Path relative to your project's root directory where the extracted L10N keys are written. | ✅ | - |
+| sourceRoot | Source root override, in case some of your sources are not located in your project's sourceRoot. | ❌ | Your project's sourceRoot directory (as specified in project.json) |
+| sourceGlob | Glob pattern used to search for files containing translations | ❌ | `**/*.{ts,tsx}` |
+| ignoreGlob | Glob pattern to ignore some files that would otherwise be included by `sourceGlob` | ❌ |  |
+
 #### Push
 
 This operation extracts translations from the source code and pushes (i.e. uploads) them to phrase.
@@ -109,7 +120,7 @@ This operation extracts translations from the source code and pushes (i.e. uploa
 | sourceGlob | Glob pattern used to search for files containing translations | ❌ | `**/*.{ts,tsx}` |
 | ignoreGlob | Glob pattern to ignore some files that would otherwise be included by `sourceGlob` | ❌ |  |
 
-#### Unused
+#### Find Unused
 
 This operation finds keys in the source code and phrase that are not in use or are missing. By configuring transfomers and filters it is also possible to compare keys that aren't a direct match. This is helpful for example when you allow your translators to create derivative translation keys that target the same translation in code.
 
