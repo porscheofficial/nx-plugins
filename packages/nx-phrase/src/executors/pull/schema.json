@@ -1,42 +1,40 @@
 {
-  "version": 2,
-  "outputCapture": "direct-nodejs",
-  "$schema": "http://json-schema.org/schema",
-  "title": "phrase executor",
-  "description": "l10n utils",
-  "type": "object",
-  "properties": {
-    "projectId": {
-      "description": "Id of translation project in phrase",
-      "type": "string"
+    "version": 2,
+    "outputCapture": "direct-nodejs",
+    "$schema": "http://json-schema.org/schema",
+    "cli": "nx",
+    "title": "phrase executor",
+    "description": "download translations from phrase and write them into the file system",
+    "type": "object",
+    "properties": {
+        "projectId": {
+            "description": "Phrase project id. Can be found in Phrase project settings under API, or the '☁️ ID'-button on the project overview.",
+            "type": "string"
+        },
+        "branch": {
+            "description": "a branch in phrase (optional)",
+            "type": "string"
+        },
+        "fileFormat": {
+            "description": "File format to download from phrase. Default is 'react_simple_json'. See https://support.phrase.com/hc/en-us/articles/9652464547740-List-of-Supported-File-Types-Strings",
+            "type": "string"
+        },
+        "output": {
+            "description": "Path relative to your project's root directory where the extracted L10N keys are written",
+            "type": "string"
+        },
+        "workingDirectory": {
+            "description": "The directory below the project root directory where the plugin stores temporary data. If not specified, it is called '.nx-phrase'.",
+            "type": "string"
+        },
+        "useSourceLocaleAsFallback": {
+            "description": "Emulate phrase fallback_locale behaviour via source_locale field. Only works with fileFormat react_simple_json",
+            "type": "boolean"
+        },
+        "useFallbackLocale": {
+            "description": "Pass fallback_locale during locale download to api. All translations that don't exist in the locale currently being downloaded will be complemented with the ones from the fallback_locale",
+            "type": "boolean"
+        }
     },
-    "branch": {
-      "description": "",
-      "type": "string"
-    },
-    "fileFormat": {
-      "description": "",
-      "type": "string"
-    },
-    "output": {
-      "description": "",
-      "type": "string"
-    },
-    "workingDirectory": {
-      "description": "",
-      "type": "string"
-    },
-    "useSourceLocaleAsFallback": {
-      "description": "Emulate phrase fallback_locale behaviour via source_locale field. Only works with fileFormat react_simple_json",
-      "type": "boolean"
-    },
-    "useFallbackLocale": {
-      "description": "Pass fallback_locale during locale download to api. All translations that don't exist in the locale currently being downloaded will be complemented with the ones from the fallback_locale",
-      "type": "boolean"
-    }
-  },
-  "required": [
-    "projectId",
-    "output"
-  ]
+    "required": ["projectId", "output"]
 }

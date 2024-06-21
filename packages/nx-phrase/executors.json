@@ -16,7 +16,12 @@
             "schema": "./src/executors/push/schema.json",
             "description": "Translation push"
         },
-        "unused": {
+        "extract": {
+            "implementation": "./src/executors/extract/executor",
+            "schema": "./src/executors/extract/schema.json",
+            "description": "Extract L10N keys from the source code"
+        },
+        "find-unused": {
             "implementation": "./src/executors/find-unused/executor",
             "schema": "./src/executors/unused/schema.json",
             "description": "Find unused translations"
