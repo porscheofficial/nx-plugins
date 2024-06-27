@@ -1,3 +1,7 @@
+export interface FormatOptions {
+    escapeSingleQuotes: boolean
+}
+
 export interface NonSensitiveArgs {
     projectId: string
     branch: string
@@ -15,4 +19,5 @@ export interface NonSensitiveArgs {
     useFallbackLocale: boolean
     inputFile: string
     workingDirectory: string
+    formatOptions: FormatOptions
 }

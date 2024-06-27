@@ -21,6 +21,11 @@ export class PullHelper {
     async downloadTranslations(locales: PhraseLocale[]): Promise<TranslationsMap> {
         const phrase = new PhraseClient(this.config.phraseClientConfig)
 
+        const formatOptions = {
+            "format_options[escape_single_quotes]":
+                this.config.fileFormat === "properties" ? this.config.formatOptions.escapeSingleQuotes : undefined,
+        }
+
         const translations: Record<string, string> = {}
         for (const locale of locales) {
             const { id, name } = locale
@@ -31,12 +36,13 @@ export class PullHelper {
                     branch: this.config.branch,
                     file_format: this.config.fileFormat,
                     // Use phrase API fallback locale?
-                    ...(this.config.useFallbackLocale
+                    ...(this.config.useFallbackLocale && locale.fallback_locale
                         ? {
                               fallback_locale_id: locale.fallback_locale.id,
                               include_empty_translations: true,
                           }
                         : {}),
+                    ...formatOptions,
                 })
 
                 translations[name] = localeData
