@@ -71,6 +71,16 @@
         "useFallbackLocale": {
             "description": "(optional) Pass fallback_locale during locale download to api. All translations that don't exist in the locale currently being downloaded will be complemented with the ones from the fallback_locale",
             "type": "boolean"
+        },
+        "formatOptions": {
+            "description": "Options for the various file formats",
+            "type": "object",
+            "properties": {
+                "escapeSingleQuotes": {
+                    "description": "Escape single quotes in L10N strings (optional, default is true). This option is only relevant for fileFormat 'properties'.",
+                    "type": "boolean"
+                }
+            }
         }
     },
     "required": ["projectId", "uploadLanguageId"]

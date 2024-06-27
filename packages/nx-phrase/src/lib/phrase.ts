@@ -118,7 +118,7 @@ export class PhraseClient {
 
         const url = new URL(`${this.#baseUrl}/projects/${projectId}/locales/${id}/download`)
         for (const argName in otherArgs) {
-            if (otherArgs[argName]) {
+            if (otherArgs[argName] !== undefined) {
                 url.searchParams.set(argName, otherArgs[argName])
             }
         }

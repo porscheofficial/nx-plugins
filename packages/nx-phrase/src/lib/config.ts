@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "fs-extra"
 import { resolve } from "path"
 
-import { NonSensitiveArgs } from "./types"
+import { FormatOptions, NonSensitiveArgs } from "./types"
 import { ExecutorContext } from "@nx/devkit"
 import { load } from "js-yaml"
 import { PhraseClientConfig } from "./phrase"
@@ -75,6 +75,10 @@ function validateConfig(config: NonSensitiveArgs, projectName: string, requiredC
     return !error
 }
 
+export const defaultFormatOptions: FormatOptions = {
+    escapeSingleQuotes: true,
+}
+
 export function getConfig(
     options: BuildExecutorSchema,
     context: ExecutorContext,
@@ -112,6 +116,12 @@ export function getConfig(
         phraseKeyFilter: options.phraseKeyFilter,
         useFallbackLocale: options.useFallbackLocale,
         useSourceLocaleAsFallback: options.useSourceLocaleAsFallback,
+        formatOptions: options.formatOptions
+            ? {
+                  escapeSingleQuotes:
+                      options.formatOptions.escapeSingleQuotes ?? defaultFormatOptions.escapeSingleQuotes,
+              }
+            : { ...defaultFormatOptions },
     } as NonSensitiveArgs
 
     if (!validateConfig(config, projectName, requiredConfigurationProperties)) {

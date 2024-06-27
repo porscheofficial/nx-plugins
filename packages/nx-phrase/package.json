@@ -1,6 +1,6 @@
 {
     "name": "@porscheofficial/nx-phrase",
-    "version": "0.2.1",
+    "version": "0.3.0",
     "repository": {
         "type": "url",
         "url": "https://github.com/porscheofficial/nx-plugins",
