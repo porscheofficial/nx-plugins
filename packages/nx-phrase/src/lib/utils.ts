@@ -9,12 +9,11 @@ export interface NormalizedSchema {
     projectRoot: string
     projectDirectory: string
     parsedTags: string[]
-    defaultPrefix: string
     offsetFromRoot: string
 }
 
 export function normalizeOptions(tree: Tree, options): NormalizedSchema {
-    const { npmScope, libsDir } = getWorkspaceLayout(tree)
+    const { libsDir } = getWorkspaceLayout(tree)
 
     const name = names(options.projectName).fileName
     const projectDirectory = options.directory ? `${names(options.directory).fileName}/${name}` : name
@@ -22,15 +21,12 @@ export function normalizeOptions(tree: Tree, options): NormalizedSchema {
     const projectRoot = `${libsDir}/${projectDirectory}`
     const parsedTags = options.tags ? options.tags.split(",").map((s) => s.trim()) : []
 
-    const defaultPrefix = npmScope
-
     return {
         ...options,
         projectName,
         projectRoot,
         projectDirectory,
         parsedTags,
-        defaultPrefix,
         offsetFromRoot: offsetFromRoot(projectRoot),
     }
 }

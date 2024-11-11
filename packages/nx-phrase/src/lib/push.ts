@@ -62,7 +62,7 @@ export async function push(config: InternalPhraseConfig, context: ExecutorContex
     }
 
     const outputPath = prepareOutput({
-        projectRoot: context.workspace.projects[context?.projectName]?.root ?? context.root,
+        projectRoot: context.projectsConfigurations.projects[context?.projectName]?.root ?? context.root,
         subfolder: "push",
         workingDirectory: config.workingDirectory,
     })
