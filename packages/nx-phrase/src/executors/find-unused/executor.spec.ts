@@ -32,7 +32,7 @@ describe("find unused", () => {
         target: {
             executor: `${NPM_SCOPE}/nx-phrase:build`,
         },
-        workspace: { projects: { test_app: { root: TEST_ASSETS_DIR, sourceRoot: TEST_ASSETS_DIR } } } as unknown,
+        projectsConfigurations: { projects: { test_app: { root: TEST_ASSETS_DIR, sourceRoot: TEST_ASSETS_DIR } } } as unknown,
     } as ExecutorContext
 
     afterEach(() => {

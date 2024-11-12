@@ -67,9 +67,10 @@ async function setupTestProject() {
     ensureNxProject("@porscheofficial/nx-phrase", "dist/packages/nx-phrase")
 
     const { devDependencies } = readJson("package.json")
-    runCommand(`yarn add -D @nx/react@${devDependencies["nx"]}`, {})
+    await runNxCommandAsync(`add @nx/react@${devDependencies["nx"]}`)
 
-    await runNxCommandAsync(`generate @nx/react:application ${testProject}`)
+    const appGeneratorOptions = "--minimal --style=none --bundler=vite --routing=false --e2eTestRunner=none --unitTestRunner=none"
+    await runNxCommandAsync(`generate @nx/react:app apps/${testProject} ${appGeneratorOptions}`)
     const projectJson = readJson(`apps/${testProject}/project.json`) as ProjectConfiguration
     expect(projectJson).toBeTruthy()
 

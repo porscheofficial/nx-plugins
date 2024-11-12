@@ -3,16 +3,17 @@
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "projectType": "application",
     "sourceRoot": "e2e/nx-phrase-e2e/src",
+    "tags": [],
+    "implicitDependencies": ["nx-phrase"],
     "targets": {
         "e2e": {
             "executor": "@nx/jest:jest",
             "options": {
                 "jestConfig": "e2e/nx-phrase-e2e/jest.config.ts",
-                "runInBand": true
+                "runInBand": true,
+                "passWithNoTests": false
             },
             "dependsOn": ["nx-phrase:build"]
         }
-    },
-    "tags": [],
-    "implicitDependencies": ["nx-phrase"]
+    }
 }

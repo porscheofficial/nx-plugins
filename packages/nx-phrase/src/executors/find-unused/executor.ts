@@ -85,8 +85,8 @@ export default async function runExecutor(options: Partial<NonSensitiveArgs>, co
     const { projectName } = context
 
     // extract and prepare keys from source code
-    const outputPath = await prepareOutput({
-        projectRoot: context.workspace.projects[context?.projectName]?.root ?? context.root,
+    const outputPath = prepareOutput({
+        projectRoot: context.projectsConfigurations.projects[context?.projectName]?.root ?? context.root,
         subfolder: "unused",
         workingDirectory: options.workingDirectory,
     })

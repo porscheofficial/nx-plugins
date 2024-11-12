@@ -90,7 +90,7 @@ export function getConfig(
 
     const {
         projectName,
-        workspace: { projects },
+        projectsConfigurations: { projects },
     } = context
     const { sourceRoot, root } = projects[projectName]
 

@@ -3,20 +3,16 @@
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "packages/nx-phrase/src",
     "projectType": "library",
+    "tags": [],
     "targets": {
         "lint": {
-            "executor": "@nx/linter:eslint",
-            "outputs": ["{options.outputFile}"],
-            "options": {
-                "lintFilePatterns": ["packages/nx-phrase/**/*.ts"]
-            }
+            "executor": "@nx/eslint:lint"
         },
         "test": {
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/packages/nx-phrase"],
             "options": {
-                "jestConfig": "packages/nx-phrase/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "packages/nx-phrase/jest.config.ts"
             }
         },
         "check-types": {
@@ -70,6 +66,5 @@
                 ]
             }
         }
-    },
-    "tags": []
+    }
 }

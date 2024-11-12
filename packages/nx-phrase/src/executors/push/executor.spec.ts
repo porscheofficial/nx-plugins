@@ -24,7 +24,7 @@ describe("Push", () => {
         const context = {
             root: TEST_ASSETS_DIR,
             projectName: "test_app",
-            workspace: { projects: { test_app: { root: TEST_ASSETS_DIR, sourceRoot: TEST_ASSETS_DIR } } } as unknown,
+            projectsConfigurations: { projects: { test_app: { root: TEST_ASSETS_DIR, sourceRoot: TEST_ASSETS_DIR } } } as unknown,
         } as ExecutorContext
 
         const output = await executor(options, context)

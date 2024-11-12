@@ -45,7 +45,7 @@ export async function extract(config: NonSensitiveArgs, context: ExecutorContext
     }
 
     const outputPath = prepareOutput({
-        projectRoot: context.workspace.projects[context?.projectName]?.root ?? context.root,
+        projectRoot: context.projectsConfigurations.projects[context?.projectName]?.root ?? context.root,
         subfolder: "extract",
         workingDirectory: config.workingDirectory,
     })
