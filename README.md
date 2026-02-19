@@ -1,3 +1,9 @@
+# DEPRECATED
+
+Unfortunately, we can no longer maintain the published plugin.
+
+---
+
 # @porscheofficial/nx-plugins
 
 This repository provides reusable patterns for use in nx monorepos. It is an excerpt of the tasks the maintainers use on a daily basis. We want to share with everybody who does similar recurring tasks and who might find the provided tools helpful.
