@@ -5,10 +5,13 @@ import debug from "debug"
 
 const logger = debug("nx-plugins.nx-phrase.lib.delete")
 
-export async function deleteKeys(file: string, config: InternalPhraseConfig): Promise<void> {
+// TODO extract actual key deletion into function and handle input file loading separately
+
+export async function deleteKeys(file: string, config: InternalPhraseConfig): Promise<string[]> {
     const keysToDelete = JSON.parse(readFileSync(file).toString())
 
     // ask for confirmation?
+    const listOfDeletedKeys = []
     const phrase = new PhraseClient(config.phraseClientConfig)
     for (const key of keysToDelete) {
         // resolve keyIds for key name
@@ -21,9 +24,12 @@ export async function deleteKeys(file: string, config: InternalPhraseConfig): Pr
         for (const keyId of keyIds) {
             try {
                 await phrase.deleteKey({ projectId: config.projectId, keyId, branch: config.branch })
+                listOfDeletedKeys.push(keyId)
             } catch (e) {
                 logger(`Could not delete key with id '${keyId}' for name '${key}', ${e}`)
             }
         }
     }
+
+    return listOfDeletedKeys
 }
